@@ -146,35 +146,35 @@
                 <li class="menu-item active">
                     <a href="javascript:void(0)" class="menu-link ">
                         <i class="menu-icon tf-icons ri-home-smile-line"></i>
-                        <div data-i18n="Dashboards">Dashboards</div>
+                        <div>Dashboards</div>
                     </a>
                 </li>
                 <!-- Lead -->
                 <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link ">
                         <i class="menu-icon tf-icons ri-layout-2-line"></i>
-                        <div data-i18n="Lead">Lead</div>
+                        <div>Lead</div>
                     </a>
                 </li>
                 <!-- Contact -->
                 <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link ">
                         <i class="menu-icon tf-icons ri-article-line"></i>
-                        <div data-i18n="Contact">Contact</div>
+                        <div>Contact</div>
                     </a>
                 </li>
                 <!-- Deal -->
                 <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link ">
                         <i class="menu-icon tf-icons ri-archive-line"></i>
-                        <div data-i18n="Deal">Deal</div>
+                        <div>Deal</div>
                     </a>
                 </li>
                 <!-- Forms -->
                 <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link ">
                         <i class="menu-icon tf-icons ri-pages-line"></i>
-                        <div data-i18n="Forms">Forms</div>
+                        <div>Forms</div>
                     </a>
                 </li>
             </ul>
