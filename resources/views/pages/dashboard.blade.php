@@ -50,6 +50,46 @@
 
 @section('content')
 
+
+<!-- Row grouping -->
+<div class="card">
+                <h5 class="card-header text-center text-md-start">Row Grouping</h5>
+                <div class="card-datatable table-responsive">
+                  <table class="dt-row-grouping table table-bordered">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Email</th>
+                        <th>City</th>
+                        <th>Date</th>
+                        <th>Salary</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Email</th>
+                        <th>City</th>
+                        <th>Date</th>
+                        <th>Salary</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+              <!--/ Row grouping -->
+              <script src="../../assets/js/tables-datatables-basic.js"></script>
+              <script src="../../assets/vendor/js/helpers.js"></script>
+
+
 @endsection
 
 
