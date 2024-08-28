@@ -21,6 +21,14 @@ Route::get('dashboard', function () {
     return view('pages/dashboard');
 })->name('dashboard');
 
+Route::get('roles', function () {
+    return view('pages/roles');
+})->name('roles');
+
+Route::get('permission', function () {
+    return view('pages/permission');
+})->name('permission');
+
 Route::get('login',function (){
     return view('pages/login');
 });
