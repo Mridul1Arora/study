@@ -104,10 +104,19 @@
                   <label><input type="search" class="form-control form-control-sm" placeholder="Search User" aria-controls="DataTables_Table_0"></label>
                 </div>
               </div>
-              <div class="user_role w-px-200 mb-5 mb-sm-0"></div>
+              <div class="user_role w-px-200 mb-5 mb-sm-0">
+              <a
+                  href="javascript:;"
+                  data-bs-toggle="modal"
+                  data-bs-target="#addRoleModal"
+                  class="role-edit-modal">
+                  <p class="mb-0 btn btn-sm btn-primary">Add Role</p>
+                </a>
+              </div>
             </div>
           </div>
         </div>
+           
         <table class="datatables-users table dataTable no-footer dtr-column" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
           <thead>
             <tr>
@@ -136,7 +145,7 @@
                   data-bs-toggle="modal"
                   data-bs-target="#addRoleModal"
                   class="role-edit-modal">
-                  <p class="mb-0 btn btn-sm btn-primary">Edit Role</p>
+                  <p class="mb-0 btn btn-sm btn-secondary">Edit Role</p>
                 </a>
               </td>
             </tr>
@@ -153,7 +162,7 @@
                   data-bs-toggle="modal"
                   data-bs-target="#addRoleModal"
                   class="role-edit-modal">
-                  <p class="mb-0 btn btn-sm btn-primary">Edit Role</p>
+                  <p class="mb-0 btn btn-sm btn-secondary">Edit Role</p>
                 </a>              </td>
             </tr>
             <!-- Add more rows as needed -->
@@ -185,7 +194,6 @@
   </div>
   <!--/ Role Table -->
 </div>
-
 
 
 <div class="modal fade" id="addRoleModal" tabindex="-1" aria-hidden="true">
@@ -409,8 +417,24 @@
                               </tbody>
                             </table>
                           </div>
-
-
+                          <!-- Permission table -->
+                        </div>
+                        <div class="col-12 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                          <button type="submit" class="btn btn-primary">Submit</button>
+                          <button
+                            type="reset"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
+                      <!--/ Add role form -->
+                    </div>
+                  </div>
+                </div>
+              </div>
 
 @endsection
 
