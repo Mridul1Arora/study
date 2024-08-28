@@ -56,7 +56,7 @@
     @include('layout.partials.header')
     
     
-    <div id="content" class="flex-grow-1">
+    <div class="container-fluid">
         @yield('content')
     </div>          
               
