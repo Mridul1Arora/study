@@ -153,21 +153,21 @@
                 <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link ">
                         <i class="menu-icon tf-icons ri-layout-2-line"></i>
-                        <div data-i18n="Layouts">Lead</div>
+                        <div data-i18n="Lead">Lead</div>
                     </a>
                 </li>
                 <!-- Contact -->
                 <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link ">
                         <i class="menu-icon tf-icons ri-article-line"></i>
-                        <div data-i18n="Pages">Contact</div>
+                        <div data-i18n="Contact">Contact</div>
                     </a>
                 </li>
                 <!-- Deal -->
                 <li class="menu-item">
                     <a href="javascript:void(0)" class="menu-link ">
                         <i class="menu-icon tf-icons ri-archive-line"></i>
-                        <div data-i18n="Components">Deal</div>
+                        <div data-i18n="Deal">Deal</div>
                     </a>
                 </li>
                 <!-- Forms -->
