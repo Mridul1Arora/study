@@ -28,3 +28,15 @@ Route::get('roles', function () {
 Route::get('permission', function () {
     return view('pages/permission');
 })->name('permission');
+
+Route::get('login',function (){
+    return view('pages/login');
+});
+
+Route::get('register',function (){
+    return view('pages/register');
+});
+
+Route::get('editDetails',function (){
+    return view('layout/user/editDetails');
+});
