@@ -45,9 +45,26 @@ Route::get('permission', function () {
     return view('pages/permission');
 })->name('permission');
 
-Route::get('users', function () {
-    return view('pages/users');
+
+Route::get('setting/users', function () {
+    return view('setting/users');
 })->name('users');
+
+Route::get('setting/role-setting', function () {
+    return view('setting/role-setting');
+})->name('role-setting');
+
+Route::get('setting/permission-setting', function () {
+    return view('setting/permission-setting');
+})->name('permission-setting');
+
+Route::get('setting/module-field-setting', function () {
+    return view('setting/module-field-setting');
+})->name('module-field-setting');
+
+Route::get('setting/main-setting', function () {
+    return view('setting/main-setting');
+})->name('main-setting');
 
 Route::get('login',function (){
     return view('pages/login');
