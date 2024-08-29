@@ -21,6 +21,18 @@ Route::get('dashboard', function () {
     return view('pages/dashboard');
 })->name('dashboard');
 
+Route::get('lead', function () {
+    return view('pages/lead');
+})->name('lead');
+
+Route::get('contact', function () {
+    return view('pages/contact');
+})->name('contact');
+
+Route::get('deal', function () {
+    return view('pages/deal');
+})->name('deal');
+
 Route::get('roles', function () {
     return view('pages/roles');
 })->name('roles');

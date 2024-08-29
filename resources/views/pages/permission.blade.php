@@ -8,7 +8,7 @@
 
 @extends('layout.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Permission')
 
 @section('content')
 <div class="col-12">

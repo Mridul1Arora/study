@@ -7,7 +7,7 @@
 
 @extends('layout.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Role')
 
 @section('content')
 
