@@ -66,6 +66,10 @@ Route::get('setting/main-setting', function () {
     return view('setting/main-setting');
 })->name('main-setting');
 
+Route::get('services/calender', function () {
+    return view('services/calender');
+})->name('services/calender');
+
 Route::get('login',function (){
     return view('pages/login');
 });
@@ -76,7 +80,7 @@ Route::get('register',function (){
 
 Route::get('my-profile',function (){
     return view('pages/my-profile');
-});
+})->name('my-profile');
 
 Route::get('changePassword', function (){
     return view('pages/changepass');

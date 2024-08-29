@@ -105,7 +105,7 @@
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
                     <li>
-                      <a class="dropdown-item waves-effect" href="pages-account-settings-account.html">
+                      <a class="dropdown-item waves-effect"  href="{{ route('my-profile') }}">
                         <div class="d-flex">
                           <div class="flex-shrink-0 me-2">
                             <div class="avatar avatar-online">
@@ -123,12 +123,12 @@
                       <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item waves-effect" href="pages-profile-user.html">
+                      <a class="dropdown-item waves-effect"  href="{{ route('my-profile') }}">
                         <i class="ri-user-3-line ri-22px me-3"></i><span class="align-middle">My Profile</span>
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item waves-effect" href="pages-account-settings-account.html">
+                      <a class="dropdown-item waves-effect" href="{{ route('users') }}">
                         <i class="ri-settings-4-line ri-22px me-3"></i><span class="align-middle">Settings</span>
                       </a>
                     </li>
