@@ -151,21 +151,21 @@
                     </a>
                 </li>
                 <!-- Lead -->
-                <li class="menu-item {{ request()->is('lead') ? 'active' : '' }}">
+                <li class="menu-item {{ request()->is('lead*') ? 'active' : '' }}">
                     <a href="{{ url('/lead') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-layout-2-line"></i>
                         <div>Lead</div>
                     </a>
                 </li>
                 <!-- Contact -->
-                <li class="menu-item {{ request()->is('contact') ? 'active' : '' }}">
+                <li class="menu-item {{ request()->is('contact*') ? 'active' : '' }}">
                     <a href="{{ url('/contact') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-article-line"></i>
                         <div>Contact</div>
                     </a>
                 </li>
                 <!-- Deal -->
-                <li class="menu-item {{ request()->is('deal') ? 'active' : '' }}">
+                <li class="menu-item {{ request()->is('deal*') ? 'active' : '' }}">
                     <a href="{{ url('/deal') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-archive-line"></i>
                         <div>Deal</div>
