@@ -22,11 +22,26 @@
             <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
               <ul class="navbar-nav flex-row align-items-center ms-auto">
                 <!-- Search -->
-                <li class="nav-item navbar-search-wrapper me-1 me-xl-0">
+                <!-- <li class="nav-item navbar-search-wrapper me-1 me-xl-0">
                   <a class="nav-link btn btn-text-secondary rounded-pill search-toggler fw-normal waves-effect waves-light" href="javascript:void(0);">
                     <i class="ri-search-line ri-22px scaleX-n1-rtl"></i>
                   </a>
+                </li> -->
+                <li class="nav-item navbar-search-wrapper me-1 me-xl-0">
+                  <a
+                    class="nav-link btn btn-text-secondary rounded-pill search-toggler fw-normal"
+                    href="javascript:void(0);">
+                    <i class="ri-search-line ri-22px scaleX-n1-rtl"></i>
+                  </a>
                 </li>
+                <div class="navbar-search-wrapper search-input-wrapper d-none">
+                  <input
+                    type="text"
+                    class="form-control search-input container-xxl border-0"
+                    placeholder="Search..."
+                    aria-label="Search..." />
+                  <i class="ri-close-fill search-toggler cursor-pointer"></i>
+                </div>
                 <!-- /Search -->             
 
                 <!-- Notification -->

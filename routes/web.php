@@ -49,6 +49,14 @@ Route::get('register',function (){
     return view('pages/register');
 });
 
-Route::get('editDetails',function (){
-    return view('layout/user/editDetails');
+Route::get('my-profile',function (){
+    return view('pages/my-profile');
+});
+
+Route::get('changePassword', function (){
+    return view('pages/changepass');
+});
+
+Route::get('kanban', function (){
+    return view('layout/partials/kanban');
 });
