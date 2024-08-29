@@ -25,6 +25,10 @@ Route::get('lead', function () {
     return view('pages/lead');
 })->name('lead');
 
+Route::get('lead/id', function () {
+    return view('pages/lead-id');
+})->name('lead-id');
+
 Route::get('contact', function () {
     return view('pages/contact');
 })->name('contact');
@@ -40,6 +44,10 @@ Route::get('roles', function () {
 Route::get('permission', function () {
     return view('pages/permission');
 })->name('permission');
+
+Route::get('users', function () {
+    return view('pages/users');
+})->name('users');
 
 Route::get('login',function (){
     return view('pages/login');
