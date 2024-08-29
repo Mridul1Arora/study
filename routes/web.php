@@ -89,3 +89,7 @@ Route::get('changePassword', function (){
 Route::get('kanban', function (){
     return view('layout/partials/kanban');
 });
+
+Route::get('calender', function (){
+    return view('components/calender');
+});
