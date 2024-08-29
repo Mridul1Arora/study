@@ -137,42 +137,43 @@
         </nav>
 
 
-<aside id="layout-menu" class="layout-menu-horizontal menu-horizontal menu bg-menu-theme flex-grow-0" data-bg-class="bg-menu-theme" style="touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+
+        <aside id="layout-menu" class="layout-menu-horizontal menu-horizontal menu bg-menu-theme flex-grow-0" data-bg-class="bg-menu-theme" style="touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
     <div class="container-xxl d-flex h-100">
         <a href="#" class="menu-horizontal-prev d-none"></a>
         <div class="menu-horizontal-wrapper">
             <ul class="menu-inner" style="margin-left: 0px;">
                 <!-- Dashboards -->
-                <li class="menu-item active">
-                    <a href="javascript:void(0)" class="menu-link ">
+                <li class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">
+                    <a href="{{ url('/dashboard') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-home-smile-line"></i>
                         <div>Dashboards</div>
                     </a>
                 </li>
                 <!-- Lead -->
-                <li class="menu-item">
-                    <a href="javascript:void(0)" class="menu-link ">
+                <li class="menu-item {{ request()->is('lead') ? 'active' : '' }}">
+                    <a href="{{ url('/lead') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-layout-2-line"></i>
                         <div>Lead</div>
                     </a>
                 </li>
                 <!-- Contact -->
-                <li class="menu-item">
-                    <a href="javascript:void(0)" class="menu-link ">
+                <li class="menu-item {{ request()->is('contact') ? 'active' : '' }}">
+                    <a href="{{ url('/contact') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-article-line"></i>
                         <div>Contact</div>
                     </a>
                 </li>
                 <!-- Deal -->
-                <li class="menu-item">
-                    <a href="javascript:void(0)" class="menu-link ">
+                <li class="menu-item {{ request()->is('deal') ? 'active' : '' }}">
+                    <a href="{{ url('/deal') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-archive-line"></i>
                         <div>Deal</div>
                     </a>
                 </li>
                 <!-- Forms -->
-                <li class="menu-item">
-                    <a href="javascript:void(0)" class="menu-link ">
+                <li class="menu-item {{ request()->is('forms') ? 'active' : '' }}">
+                    <a href="{{ url('/forms') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-pages-line"></i>
                         <div>Forms</div>
                     </a>
@@ -182,3 +183,5 @@
         <a href="#" class="menu-horizontal-next d-none"></a>
     </div>
 </aside>
+
+        
