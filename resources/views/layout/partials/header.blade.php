@@ -1,3 +1,4 @@
+
 <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
           <div class="container-xxl">
             <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-6">
@@ -95,7 +96,8 @@
                   </ul>
                 </li>
                 <!--/ Notification -->
-
+                
+      
                 <!-- User -->
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
@@ -105,16 +107,15 @@
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
                     <li>
-                      <a class="dropdown-item waves-effect" href="pages-account-settings-account.html">
+                      <a class="dropdown-item waves-effect"  href="{{ route('my-profile') }}">
                         <div class="d-flex">
                           <div class="flex-shrink-0 me-2">
                             <div class="avatar avatar-online">
                               <img src="../../assets/img/avatars/1.png" alt="" class="rounded-circle">
                             </div>
-                          </div>
+                          </div> 
                           <div class="flex-grow-1">
-                            <span class="fw-medium d-block small">John Doe</span>
-                            <small class="text-muted">Admin</small>
+                            <span class="fw-medium d-block small">{{auth()->user()->name}}</span>
                           </div>
                         </div>
                       </a>
@@ -123,24 +124,29 @@
                       <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item waves-effect" href="pages-profile-user.html">
+                      <a class="dropdown-item waves-effect"  href="{{ route('my-profile') }}">
                         <i class="ri-user-3-line ri-22px me-3"></i><span class="align-middle">My Profile</span>
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item waves-effect" href="pages-account-settings-account.html">
+                      <a class="dropdown-item waves-effect" href="{{ route('users') }}">
                         <i class="ri-settings-4-line ri-22px me-3"></i><span class="align-middle">Settings</span>
                       </a>
                     </li>
-                   
-                    
+          
                     <li>
-                      <div class="d-grid px-4 pt-2 pb-1">
-                        <a class="btn btn-sm btn-danger d-flex waves-effect waves-light" href="auth-login-cover.html" target="_blank">
-                          <small class="align-middle">Logout</small>
-                          <i class="ri-logout-box-r-line ms-2 ri-16px"></i>
-                        </a>
-                      </div>
+                    <div class="d-grid px-4 pt-2 pb-1">
+                      <form method="POST" action="{{ route('logout') }}">
+                          @csrf
+                          <a class="btn btn-sm btn-danger d-flex waves-effect waves-light" 
+                            href="{{ route('logout') }}" 
+                            onclick="event.preventDefault(); 
+                                      this.closest('form').submit();">
+                              <small class="align-middle">Logout</small>
+                              <i class="ri-logout-box-r-line ms-2 ri-16px"></i>
+                          </a>
+                      </form>
+                  </div>
                     </li>
                   </ul>
                 </li>
@@ -166,12 +172,19 @@
                     </a>
                 </li>
                 <!-- Lead -->
+
+               
+              @can('can access lead')
                 <li class="menu-item {{ request()->is('lead*') ? 'active' : '' }}">
                     <a href="{{ url('/lead') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-layout-2-line"></i>
                         <div>Lead</div>
                     </a>
                 </li>
+            @endcan
+
+
+
                 <!-- Contact -->
                 <li class="menu-item {{ request()->is('contact*') ? 'active' : '' }}">
                     <a href="{{ url('/contact') }}" class="menu-link">

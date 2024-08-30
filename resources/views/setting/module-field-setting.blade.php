@@ -5,11 +5,7 @@
 @section('content')
 
 
-<div class="container-fluid" style="
-    gap: 30px;
-    display: flex;
-    padding-top: 30px;
-">
+<div class="container-fluid custom-css-container-fluid">
         <div class="col-lg-2 col-12">
     <div class="d-flex justify-content-between flex-column mb-4 mb-md-0">
       <h5 class="mb-4">Getting Started</h5>
