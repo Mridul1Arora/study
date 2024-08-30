@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LeadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,9 +88,14 @@ Route::get('changePassword', function (){
 });
 
 Route::get('kanban', function (){
-    return view('layout/partials/kanban');
+    return view('services/kanban');
 });
 
 Route::get('calender', function (){
     return view('components/calender');
 });
+
+// Route::get('/test-mongo', [LeadController::class, 'testConnection']);
+
+Route::get('lead-list',[LeadController::class,'index']);
+
