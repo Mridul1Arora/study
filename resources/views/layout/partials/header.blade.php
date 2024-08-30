@@ -174,7 +174,7 @@
                 <!-- Lead -->
 
                
-              @can('can access lead')
+              @can('view users')
                 <li class="menu-item {{ request()->is('lead*') ? 'active' : '' }}">
                     <a href="{{ url('/lead') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-layout-2-line"></i>

@@ -73,9 +73,10 @@ Route::middleware('auth')->group(function () {
 });
 
 
+Route::middleware(['auth', 'can:view lead'])->group(function () {
 
 
-Route::middleware(['auth', 'can:can access lead'])->group(function () {
+
     Route::get('lead', function () {
         return view('pages/lead');
     })->name('lead');
