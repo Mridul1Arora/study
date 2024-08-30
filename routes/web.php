@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::get('changePassword', function () {
         return view('pages/changepass');
     });
+});
 
 
 
