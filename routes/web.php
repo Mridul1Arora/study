@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LeadController;
 
 
 
@@ -69,14 +70,13 @@ Route::middleware('auth')->group(function () {
     Route::get('changePassword', function () {
         return view('pages/changepass');
     });
-
-    Route::get('kanban', function () {
-        return view('layout/partials/kanban');
-    });
 });
 
 
 Route::middleware(['auth', 'can:view lead'])->group(function () {
+
+
+
     Route::get('lead', function () {
         return view('pages/lead');
     })->name('lead');
@@ -101,3 +101,4 @@ Route::get('/', function () {
 })->name('welcome');
 
 require __DIR__.'/auth.php';
+
