@@ -94,18 +94,32 @@ class RoleController extends Controller
             $users = $this->roleRepository->getAllUsersInHierarchy($userRole);
 
             $parentRoleName = $userRole->parent ? $userRole->parent->name : null;
-
+            $modulepermission = $this->roleRepository->getmodulepermissions();
+            $moduleSpecificPermissions = $this->roleRepository->getmodulerelatedPermissoin();
             return view('roles.role-info', [
                 'userRole' => $userRole,
                 'users' => $users,
-                'parentRoleName' => $parentRoleName
+                'parentRoleName' => $parentRoleName,
+                'modulepermission' => $modulepermission,
+                'moduleSpecificPermissions' => $moduleSpecificPermissions
             ]);
         }
 
         return view('roles.role-info', [
-            'userRole' => null,
+            'userRole' => [],
             'users' => [],
-            'parentRoleName' => null
+            'parentRoleName' => null,
+            'modulepermission' => [],
+            'moduleSpecificPermissions' => []
         ]);
+    }
+
+    public function updateCorePermission(Request $request){
+        if(!empty($request->all())){
+            $corPermissoinId = $request->all()['permission_id'];
+            $moduleId = $request->all()['module_id'];
+
+            $this->roleRepository->updateCorePermissions($corPermissoinId, $moduleId);
+        }
     }
 }

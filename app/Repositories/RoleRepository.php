@@ -104,4 +104,32 @@ class RoleRepository implements RoleRepositoryInterface
 
         return $users;
     }
+
+    public function getModulePermissions() {
+        $modulePermissions = \DB::table('core_permission_module_mapper')
+            ->join('modules', 'core_permission_module_mapper.module_id', '=', 'modules.id')
+            ->join('core_permissions', 'core_permission_module_mapper.core_permission_id', '=', 'core_permissions.id')
+            ->select('modules.id as module_id', 'modules.module_name', 'core_permissions.name as permission_name')
+            ->get();
+    
+        return $modulePermissions;
+    }    
+
+    public function getmodulerelatedPermissoin() {
+        $moduleSpecificPermissions = \DB::table('core_permissions')
+            ->where('module_specific', 1)
+            ->select('name', 'id')
+            ->get();
+        return $moduleSpecificPermissions;
+    }
+
+    public function updateCorePermissions($corPermissoinId, $moduleId){
+        if($corPermissoinId && $moduleId) {
+            $updated = \DB::table('core_permission_module_mapper')
+                ->where('module_id', $moduleId)
+                ->update(['core_permission_id' => $corPermissoinId]);
+            return $updated ? 'Update successful' : 'No matching record found or update failed';
+        }
+
+    }
 }

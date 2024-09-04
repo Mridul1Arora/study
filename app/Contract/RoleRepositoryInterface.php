@@ -16,4 +16,7 @@ interface RoleRepositoryInterface
     public function addPermission($data);
     public function getRoleHierarchy(Role $role);
     public function getAllUsersInHierarchy(Role $role);
+    public function getmodulepermissions();
+    public function getmodulerelatedPermissoin();
+    public function updateCorePermissions($id1,$id2);
 }
