@@ -1,6 +1,10 @@
 <?php
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\LeadController;
+use App\Http\Controllers\RoleController;
+
 
 
 
@@ -14,6 +18,30 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+
+    Route::get('roles/hierarchy/show', [RoleController::class, 'showRoleHierarchy'])->name('roles.hierarchy');
+    Route::get('roles/show/{id}', [RoleController::class, 'showRoleDetails'])->name('roles.details');
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('/roles/{role}', [RoleController::class, 'show'])->name('roles.show');
+    Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    Route::post('roles/permission/create', [RoleController::class, 'permisssionCreate'])->name('per.create');
+
+
+
+    Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
+    Route::get('/leads/create', [LeadController::class, 'create'])->name('leads.create');
+    Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
+    Route::get('/leads/{lead_id}', [LeadController::class, 'show'])->name('leads.show');
+    Route::get('/leads/{lead_id}/edit', [LeadController::class, 'edit'])->name('leads.edit');
+    Route::put('/leads/{lead_id}', [LeadController::class, 'update'])->name('leads.update');
+    Route::get('/leads/delete/{lead_id}', [LeadController::class, 'destroy'])->name('leads.destroy');
+
+
+
     // Route::get('lead', function () {
     //     return view('pages/lead');
     // })->name('lead');
@@ -21,6 +49,8 @@ Route::middleware('auth')->group(function () {
     // Route::get('lead/id', function () {
     //     return view('pages/lead-id');
     // })->name('lead-id');
+
+    Route::get('/user' ,[UserController::class, 'index'])->name('user');
 
     Route::get('contact', function () {
         return view('pages/contact');
@@ -30,9 +60,9 @@ Route::middleware('auth')->group(function () {
         return view('pages/deal');
     })->name('deal');
 
-    Route::get('roles', function () {
-        return view('pages/roles');
-    })->name('roles');
+    // Route::get('roles', function () {
+    //     return view('pages/roles');
+    // })->name('roles');
 
     Route::get('permission', function () {
         return view('pages/permission');
@@ -73,6 +103,9 @@ Route::middleware('auth')->group(function () {
     Route::get('kanban', function () {
         return view('layout/partials/kanban');
     });
+
+
+
 });
 
 
@@ -85,6 +118,8 @@ Route::middleware(['auth', 'can:view lead'])->group(function () {
         return view('pages/lead-id');
     })->name('lead-id');
 });
+
+
 
 
 // Publicly accessible routes (Login, Register, Welcome page)

@@ -50,13 +50,15 @@
   </div>
 
 
-<!-- Permission Table -->
 
-<div class="col-10">
+
+
+
+  <div class="col-10">
   <div class="card">
     <div class="card-datatable table-responsive">
       <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
-        <div class="row mx-1">
+      <div class="row mx-1">
           <div class="col-sm-12 col-md-3 mt-5 mt-md-0">
             <div class="dataTables_length" id="DataTables_Table_0_length">
               <label>Show 
@@ -89,92 +91,49 @@
             </div>
           </div>
         </div>
-        <table class="datatables-permissions table dataTable no-footer dtr-column" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" style="width: 1134px;">
+        <table class="datatables-permissions table dataTable no-footer dtr-column" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
           <thead>
             <tr>
-              <th class="control sorting_disabled dtr-hidden" rowspan="1" colspan="1" style="width: 0px; display: none;" aria-label=""></th>
-              <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 240px;" aria-label="Name: activate to sort column ascending">Name</th>
-              <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 365px;" aria-label="Assigned To">Assigned To</th>
-              <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 243px;" aria-label="Created Date">Created Date</th>
-              <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 124px;" aria-label="Actions">Actions</th>
+              <th>Permission ID</th>
+              <th>Name</th>
+              <th>Created Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr class="odd">
-              <td class="control" tabindex="0" style="display: none;"></td>
-              <td><span class="text-nowrap text-heading">Management</span></td>
-              <td>
-                <span class="text-nowrap">
-                  <a href="app-user-list.html"><span class="badge rounded-pill bg-label-primary me-4">Administrator</span></a>
-                </span>
-              </td>
-              <td><span class="text-nowrap">14 Apr 2021, 8:43 PM</span></td>
+            @foreach ($role['permission_list'] as $permission)
+            <tr>
+              <td>{{ $permission['id'] }}</td>
+              <td>{{ $permission['name'] }}</td>
+              <td>{{ \Carbon\Carbon::parse($permission['created_at'])->format('d M Y, h:i A') }}</td>
               <td>
                 <div class="d-flex align-items-center">
-                 
-                  <span class="text-nowrap">
-                    <button class="btn btn-sm btn-icon btn-text-secondary text-body rounded-pill waves-effect waves-light" data-bs-target="#editPermissionModal" data-bs-toggle="modal" data-bs-dismiss="modal">
-                      <i class="ri-edit-box-line ri-20px"></i>
-                    </button>
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr class="even">
-              <td class="control" tabindex="0" style="display: none;"></td>
-              <td><span class="text-nowrap text-heading">Manage Billing &amp; Roles</span></td>
-              <td>
-                <span class="text-nowrap">
-                  <a href="app-user-list.html"><span class="badge rounded-pill bg-label-primary me-4">Administrator</span></a>
-                </span>
-              </td>
-              <td><span class="text-nowrap">16 Sep 2021, 5:20 PM</span></td>
-              <td>
-                <div class="d-flex align-items-center">
+                  <!-- Edit Button -->
+                  <button class="btn btn-sm btn-icon btn-text-secondary text-body rounded-pill waves-effect waves-light" data-bs-target="#editPermissionModal" data-bs-toggle="modal" data-bs-dismiss="modal">
+                    <i class="ri-edit-box-line ri-20px"></i>
+                  </button>
                   
-                  <span class="text-nowrap">
-                    <button class="btn btn-sm btn-icon btn-text-secondary text-body rounded-pill waves-effect waves-light" data-bs-target="#editPermissionModal" data-bs-toggle="modal" data-bs-dismiss="modal">
-                      <i class="ri-edit-box-line ri-20px"></i>
-                    </button>
-                  </span>
                 </div>
               </td>
             </tr>
-            <!-- Repeat similar structure for other rows -->
+            @endforeach
           </tbody>
         </table>
         <div class="row mx-2">
-          <div class="col-sm-12 col-md-6">
-            <div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">
-              Showing 1 to 9 of 9 entries
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
-              <ul class="pagination">
-                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
-                  <a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="previous" tabindex="-1" class="page-link">
-                    <i class="ri-arrow-left-s-line"></i>
-                  </a>
-                </li>
-                <li class="paginate_button page-item active">
-                  <a href="#" aria-controls="DataTables_Table_0" role="link" aria-current="page" data-dt-idx="0" tabindex="0" class="page-link">1</a>
-                </li>
-                <li class="paginate_button page-item next disabled" id="DataTables_Table_0_next">
-                  <a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="next" tabindex="-1" class="page-link">
-                    <i class="ri-arrow-right-s-line"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <!-- Pagination info -->
         </div>
       </div>
     </div>
   </div>
 </div>
 
+
+
+
+
+
 <!--/ Permission Table -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <div class="modal fade" id="addPermissionModal" tabindex="-1" aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-dialog-centered modal-simple">
@@ -251,6 +210,46 @@
 <!--/ Edit Permission Modal -->
 
 <!-- /Modal -->
-          </div>
+</div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+  $(document).ready(function() {
+    const form = $('#addPermissionForm');
+    
+    form.on('submit', function(event) {
+      event.preventDefault();
+
+      const permissionName = $('#modalPermissionName').val();
+
+      const formData = new FormData();
+      formData.append('permissionName', permissionName);
+
+      $.ajax({
+        url: '{{ route("per.create") }}',
+        method: 'POST',
+        data: formData,
+        processData: false, 
+        contentType: false,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+          if (response.success) {
+            alert('Permission created successfully!');
+            $('#addPermissionModal').modal('hide');
+          } else {
+            alert('Error creating permission.');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error:', error);
+          alert('Error creating permission.');
+        }
+      });
+    });
+  });
+
+</script>
 @endsection

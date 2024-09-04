@@ -1,5 +1,6 @@
+<link rel="stylesheet" href="../../assets/css/custom-css.css" />
 
-<nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
+<nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme navbar-background-color" id="layout-navbar">
           <div class="container-xxl">
             <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-6">
               <a href="index.html" class="app-brand-link gap-2">

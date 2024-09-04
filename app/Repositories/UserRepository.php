@@ -7,6 +7,7 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Spatie\Activitylog\Models\Activity;
 
 class UserRepository implements UserRepositoryInterface 
 {
@@ -14,7 +15,9 @@ class UserRepository implements UserRepositoryInterface
     {
 
 
-
+        activity()->log('Look mum, I logged something');
+        dd($lastActivity = Activity::all()->last());
+        
         $users = User::find(6);
         $per = $users->getAllPermissions();
        
