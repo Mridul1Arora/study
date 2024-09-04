@@ -41,11 +41,10 @@
 </div>
 
 
-
-
 <div class="modal modal-top fade" id="modalTop" tabindex="-1">
     <div class="modal-dialog">
-    <form class="modal-content" method="POST" action="{{ route('role.updateCorePermission') }}">
+    <form id="updatePermissionForm" class="modal-content">
+   
     @csrf
             <!-- Modal Header with a Single Heading -->
             <div class="modal-header">
@@ -82,6 +81,8 @@
         </form>
     </div>
 </div>
+
+
 
 
 
@@ -134,32 +135,8 @@
     </div>
 </div>
 
-<script>
-$(document).ready(function() {
-    $('#updatePermissionForm').on('submit', function(e) {
-        e.preventDefault();
 
-        $.ajax({
-            url: "{{ route('role.updateCorePermission') }}",
-            type: "POST",
-            data: $(this).serialize(),
-            success: function(response) {
-                if(response.success) {
-                    alert(response.message);
-                    $('#updatePermissionModal').modal('hide'); // Hide the modal
-                    location.reload(); // Reload the page
-                } else {
-                    alert(response.message);
-                }
-            },
-            error: function(xhr) {
-                alert("An error occurred: " + xhr.responseText);
-            }
-        });
-    });
-});
-</script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const roleDetailsBtn = document.getElementById('role-details-btn');
@@ -182,7 +159,6 @@ $(document).ready(function() {
         });
     });
 </script>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -217,5 +193,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+<script>
+$(document).ready(function() {
+    $('#updatePermissionForm').on('submit', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: "{{ route('role.updateCorePermission') }}",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function(response) {
+                console.log(response);
+                if(response.success) {
+                    $('#updatePermissionModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function(xhr) {
+                alert("An error occurred: " + xhr.responseText);
+            }
+        });
+    });
+});
+</script>
 
 @endsection

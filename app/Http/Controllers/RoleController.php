@@ -119,7 +119,10 @@ class RoleController extends Controller
             $corPermissoinId = $request->all()['permission_id'];
             $moduleId = $request->all()['module_id'];
 
-            $this->roleRepository->updateCorePermissions($corPermissoinId, $moduleId);
+            $respose = $this->roleRepository->updateCorePermissions($corPermissoinId, $moduleId);
+            if($respose) {
+                return ['success' => 'Successfully Updated'];
+            }
         }
     }
 }

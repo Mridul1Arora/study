@@ -128,7 +128,7 @@ class RoleRepository implements RoleRepositoryInterface
             $updated = \DB::table('core_permission_module_mapper')
                 ->where('module_id', $moduleId)
                 ->update(['core_permission_id' => $corPermissoinId]);
-            return $updated ? 'Update successful' : 'No matching record found or update failed';
+            return $updated;
         }
 
     }
