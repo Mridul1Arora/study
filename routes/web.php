@@ -22,6 +22,10 @@ Route::middleware('auth')->group(function () {
     Route::get('roles/hierarchy/show', [RoleController::class, 'showRoleHierarchy'])->name('roles.hierarchy');
     Route::get('roles/show/{id}', [RoleController::class, 'showRoleDetails'])->name('roles.details');
     Route::post('/role/update-permission', [RoleController::class, 'updateCorePermission'])->name('role.updateCorePermission');
+    Route::post('/role/update-rule', [RoleController::class, 'updateDataSharingRule'])->name('role.updateDataSharingRule');
+    Route::get('/role/get-permissions-by-module', [RoleController::class, 'getPermissionsByModule'])->name('role.getPermissionsByModule');
+
+
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
     Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');

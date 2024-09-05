@@ -9,6 +9,7 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Activitylog\Models\Activity;
+use DB;
 
 class RoleRepository implements RoleRepositoryInterface 
 {
@@ -106,7 +107,7 @@ class RoleRepository implements RoleRepositoryInterface
     }
 
     public function getModulePermissions() {
-        $modulePermissions = \DB::table('core_permission_module_mapper')
+        $modulePermissions = DB::table('core_permission_module_mapper')
             ->join('modules', 'core_permission_module_mapper.module_id', '=', 'modules.id')
             ->join('core_permissions', 'core_permission_module_mapper.core_permission_id', '=', 'core_permissions.id')
             ->select('modules.id as module_id', 'modules.module_name', 'core_permissions.name as permission_name')
@@ -116,7 +117,7 @@ class RoleRepository implements RoleRepositoryInterface
     }    
 
     public function getmodulerelatedPermissoin() {
-        $moduleSpecificPermissions = \DB::table('core_permissions')
+        $moduleSpecificPermissions = DB::table('core_permissions')
             ->where('module_specific', 1)
             ->select('name', 'id')
             ->get();
@@ -125,11 +126,61 @@ class RoleRepository implements RoleRepositoryInterface
 
     public function updateCorePermissions($corPermissoinId, $moduleId){
         if($corPermissoinId && $moduleId) {
-            $updated = \DB::table('core_permission_module_mapper')
+            $updated = DB::table('core_permission_module_mapper')
                 ->where('module_id', $moduleId)
                 ->update(['core_permission_id' => $corPermissoinId]);
             return $updated;
         }
-
     }
+
+    public function getDataSharingRules() {
+
+        $data = DB::table('role_data_sharing_map')
+            ->join('roles as from_role', 'role_data_sharing_map.role_id_from', '=', 'from_role.id')
+            ->join('roles as to_role', 'role_data_sharing_map.role_id_to', '=', 'to_role.id')
+            ->join('core_permissions', 'role_data_sharing_map.core_permission_id', '=', 'core_permissions.id')
+            ->join('modules', 'role_data_sharing_map.module_id', '=', 'modules.id')
+            ->select(
+                'role_data_sharing_map.module_id',
+                'role_data_sharing_map.rule_name',
+                'modules.module_name as module_name',
+                'core_permissions.name as permission_name',
+                'core_permissions.id as core_premission_id',
+                'from_role.name as from_role_name',
+                'from_role.id as from_role_id',
+                'to_role.name as to_role_name',
+                'to_role.id as to_role_id'
+            )
+            ->where('core_permissions.module_specific', 1)
+            ->get();
+    
+        $formattedData = [];
+
+        foreach ($data as $item) {
+            $formattedData[$item->module_id][] = [
+                'module_name' => $item->module_name,
+                'rule_name' => $item->rule_name,
+                'permission_name' => $item->permission_name,
+                'permission_id' => $item->core_premission_id,
+                'from_role' => $item->from_role_name,
+                'from_role_id' => $item->from_role_id,
+                'to_role' => $item->to_role_name,
+                'to_role_id' => $item->to_role_id
+            ];
+        }
+        return $formattedData;
+    }
+
+    public function getDataSharingRule($moduleId) 
+    {
+        $data['core_permission'] = DB::table('core_permissions')
+            ->select(['id','name'])
+            ->where('core_permissions.module_specific', 1)->get();
+
+        $data['roles'] = DB::table('roles')->select(['id','name'])->get();
+
+        return $data;
+    }
+
+    
 }

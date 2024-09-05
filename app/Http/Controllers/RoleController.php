@@ -96,12 +96,15 @@ class RoleController extends Controller
             $parentRoleName = $userRole->parent ? $userRole->parent->name : null;
             $modulepermission = $this->roleRepository->getmodulepermissions();
             $moduleSpecificPermissions = $this->roleRepository->getmodulerelatedPermissoin();
+            $dataSharingRules = $this->roleRepository->getDataSharingRules();
+
             return view('roles.role-info', [
                 'userRole' => $userRole,
                 'users' => $users,
                 'parentRoleName' => $parentRoleName,
                 'modulepermission' => $modulepermission,
-                'moduleSpecificPermissions' => $moduleSpecificPermissions
+                'moduleSpecificPermissions' => $moduleSpecificPermissions,
+                'dataSharingRules' => $dataSharingRules
             ]);
         }
 
@@ -110,7 +113,8 @@ class RoleController extends Controller
             'users' => [],
             'parentRoleName' => null,
             'modulepermission' => [],
-            'moduleSpecificPermissions' => []
+            'moduleSpecificPermissions' => [],
+            'dataSharingRules' => []
         ]);
     }
 
@@ -125,4 +129,19 @@ class RoleController extends Controller
             }
         }
     }
+
+    public function updateDataSharingRule() {
+        dd(2323);
+    }
+
+    public function getPermissionsByModule(Request $request)
+    {
+        $moduleId = $request->input('module_id');
+        $data =[];
+        if($moduleId) {
+            $data  =  $this->roleRepository->getDataSharingRule($moduleId);
+        }
+        return $data;
+    }
+
 }

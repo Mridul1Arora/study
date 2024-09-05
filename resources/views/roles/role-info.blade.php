@@ -6,6 +6,7 @@
 
 <button type="button" class="custom-inline-spacing btn btn-primary waves-effect waves-light" id="role-details-btn">Role Details</button>
 <button type="button" class="custom-inline-spacing btn btn-primary waves-effect waves-light active" id="data-sharing-btn">Data Sharing settings</button>
+
 <div class="sharing-setting" id="data-sharing"> 
     <div class="card">
         <h5 class="card-header">Default Organization Permissions</h5>
@@ -21,7 +22,6 @@
                     @foreach($modulepermission->toArray() as $item) 
                         <tr>
                             <td>
-                                <!-- Add data attributes to pass the module data -->
                                 <a href="#" 
                                    class="open-modal" 
                                    data-bs-toggle="modal" 
@@ -38,49 +38,176 @@
             </table>
         </div>
     </div>
+
+
+
+
+
+@foreach($modulepermission->toArray() as $item)  
+    <div class="card custom-spacing">
+        <div class="card-header flex-column flex-md-row border-bottom">
+            <div class="head-label text-center">
+                <h5 class="card-title mb-0">{{ $item->module_name }}</h5>
+            </div>
+            <div class="dt-action-buttons text-end pt-3 pt-md-0">
+                <div class="dt-buttons btn-group flex-wrap">
+                    <button type="button" class="btn btn-primary waves-effect waves-light" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#basicModal" 
+                            data-module-id="{{ $item->module_id }}">
+                        Add New Rule
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-datatable table-responsive pt-0">
+            <table class="datatables-basic table table-bordered dataTable no-footer">
+                <thead>
+                    <tr>
+                        <th>Rule Name</th>
+                        <th>Shared From</th>
+                        <th>Shared To</th>
+                        <th>Permission</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach($dataSharingRules as $module_id => $module)
+                    @if(!empty($module && $module_id === $item->module_id))
+                        @foreach($module as $rule)
+                            <tr>
+                                <td>{{ $rule['rule_name'] }}</td>
+                                <td>{{ $rule['from_role'] }}</td>
+                                <td>{{ $rule['to_role'] }}</td>
+                                <td>{{ $rule['permission_name'] }}</td>
+                                <td>
+                                <button class="btn btn-sm btn-info" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#basicModal"
+                                        data-rule-name="{{ $rule['rule_name'] }}"
+                                        data-from-role="{{ $rule['from_role'] }}"
+                                        data-to-role="{{ $rule['to_role'] }}"
+                                        data-permission="{{ $rule['permission_name'] }}">
+                                    Edit
+                                </button>
+
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif    
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @endforeach
 </div>
+
+
+
+<div class="modal fade" id="basicModal" tabindex="-1" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">Sharing Rule</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col mb-6 mt-2">
+            <div class="form-floating form-floating-outline">
+              <input type="text" id="sharingRuleName" class="form-control" placeholder="Enter Sharing Rule Name">
+              <label for="sharingRuleName">Sharing Rule Name</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col mb-2">
+            <div class="form-floating form-floating-outline">
+              <select id="dataSharedFrom" class="form-select">
+                <option value="" disabled selected>Select an option</option>
+              </select>
+              <label for="dataSharedFrom">Data Shared From</label>
+            </div>
+          </div>
+
+          <div class="col mb-2">
+            <div class="form-floating form-floating-outline">
+              <select id="dataSharedTo" class="form-select">
+                <option value="" disabled selected>Select an option</option>
+              </select>
+              <label for="dataSharedTo">Data Shared To</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row g-4">
+            <div class="col mb-2">
+              <div class="form-floating form-floating-outline">
+                <select id="permission" class="form-select">
+                  <option value="" disabled selected>Select permission</option>
+                </select>
+                <label for="permission">Permission</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary waves-effect" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary waves-effect waves-light">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 
 
 <div class="modal modal-top fade" id="modalTop" tabindex="-1">
     <div class="modal-dialog">
-    <form id="updatePermissionForm" class="modal-content">
-   
-    @csrf
-            <!-- Modal Header with a Single Heading -->
+        <form id="updatePermissionForm" class="modal-content">
+        @csrf
             <div class="modal-header">
                 <h4 class="modal-title" id="modalTopTitle"></h4>
                 <button
                     type="button"
                     class="btn-close"
                     data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                    aria-label="Close">
+                </button>
             </div>
 
-            <!-- Modal Body with a Dropdown -->
             <div class="modal-body">
                 <div class="row">
                     <div class="col mb-3">
                         <div class="form-floating form-floating-outline">
-                        <input type="hidden" id="moduleIdInput" name="module_id" value="{{ $item->module_id }}">
-                            <select name="permission_id" id="dropdownSlideTop" class="form-select">
-                               
-                            </select>
+                            <input type="hidden" id="moduleIdInput" name="module_id" value="{{ $item->module_id }}">
+                            <select name="permission_id" id="dropdownSlideTop" class="form-select"></select>
                             <label for="dropdownSlideTop">Select an Option</label>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Modal Footer with Two Buttons -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                    Close
-                </button>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
         </form>
     </div>
 </div>
+       
+
+
+
+
+
+
+
 
 
 
@@ -217,6 +344,97 @@ $(document).ready(function() {
         });
     });
 });
+</script>
+
+
+<script>
+
+$(document).ready(function() {
+    $('.btn-primary[data-bs-target="#basicModal"]').on('click', function() {
+        let moduleId = $(this).data('module-id'); 
+
+        $.ajax({
+            url: "{{ route('role.getPermissionsByModule') }}",
+            type: "GET",
+            data: { module_id: moduleId },
+            success: function(response) {
+                if(response) {
+                    populateRoles(response.roles);
+                    populatePermissions(response.core_permission);
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function(xhr) {
+                console.error('An error occurred:', xhr.responseText);
+            }
+        });
+    });
+
+    function populateRoles(roles) {
+        let $dataSharedFrom = $('#dataSharedFrom');
+        let $dataSharedTo = $('#dataSharedTo');
+
+        $dataSharedFrom.empty();
+        $dataSharedTo.empty();
+        $dataSharedFrom.append('<option value="" disabled selected>Select an option</option>');
+        $dataSharedTo.append('<option value="" disabled selected>Select an option</option>');
+
+        roles.forEach(role => {
+            let option = `<option value="${role.id}">${role.name}</option>`;
+            $dataSharedFrom.append(option);
+            $dataSharedTo.append(option);
+        });
+
+        $dataSharedFrom.on('change', function() {
+            let selectedRoleId = $(this).val();
+            $dataSharedTo.find('option').each(function() {
+                if ($(this).val() == selectedRoleId) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        });
+    }
+
+    function populatePermissions(permissions) {
+        let $permission = $('#permission');
+        $permission.empty();
+        $permission.append('<option value="" disabled selected>Select permission</option>');
+
+        permissions.forEach(permission => {
+            let option = `<option value="${permission.id}">${permission.name}</option>`;
+            $permission.append(option);
+        });
+    }
+});
+</script>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('basicModal');
+    
+    // Listen for clicks on Edit buttons
+    document.querySelectorAll('.btn-info').forEach(button => {
+        button.addEventListener('click', function () {
+            // Get rule data from button attributes
+            const ruleName = this.getAttribute('data-rule-name');
+            const fromRole = this.getAttribute('data-from-role');
+            const toRole = this.getAttribute('data-to-role');
+            const permission = this.getAttribute('data-permission');
+            console.log(ruleName,fromRole,toRole,permission);
+            // Populate modal fields
+            document.getElementById('sharingRuleName').value = ruleName;
+            document.getElementById('dataSharedFrom').value = fromRole;
+            document.getElementById('dataSharedTo').value = toRole;
+            document.getElementById('permission').value = permission;
+        });
+    });
+});
+
+
 </script>
 
 @endsection

@@ -19,4 +19,6 @@ interface RoleRepositoryInterface
     public function getmodulepermissions();
     public function getmodulerelatedPermissoin();
     public function updateCorePermissions($id1,$id2);
+    public function getDataSharingRules();
+    public function getDataSharingRule($id);
 }
