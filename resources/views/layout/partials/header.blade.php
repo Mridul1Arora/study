@@ -159,52 +159,15 @@
         </nav>
 
 
-
-        <aside id="layout-menu" class="layout-menu-horizontal menu-horizontal menu bg-menu-theme flex-grow-0" data-bg-class="bg-menu-theme" style="touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+  <aside id="layout-menu" class="layout-menu-horizontal menu-horizontal menu bg-menu-theme flex-grow-0" data-bg-class="bg-menu-theme">
     <div class="container-xxl d-flex h-100">
         <a href="#" class="menu-horizontal-prev d-none"></a>
         <div class="menu-horizontal-wrapper">
-            <ul class="menu-inner" style="margin-left: 0px;">
-                <!-- Dashboards -->
+            <ul class="menu-inner" style="margin-left: 0px;" id="menu-items">
                 <li class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">
                     <a href="{{ url('/dashboard') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-home-smile-line"></i>
-                        <div>Dashboards</div>
-                    </a>
-                </li>
-                <!-- Lead -->
-
-               
-              @can('view users')
-                <li class="menu-item {{ request()->is('lead*') ? 'active' : '' }}">
-                    <a href="{{ url('/lead') }}" class="menu-link">
-                        <i class="menu-icon tf-icons ri-layout-2-line"></i>
-                        <div>Lead</div>
-                    </a>
-                </li>
-            @endcan
-
-
-
-                <!-- Contact -->
-                <li class="menu-item {{ request()->is('contact*') ? 'active' : '' }}">
-                    <a href="{{ url('/contact') }}" class="menu-link">
-                        <i class="menu-icon tf-icons ri-article-line"></i>
-                        <div>Contact</div>
-                    </a>
-                </li>
-                <!-- Deal -->
-                <li class="menu-item {{ request()->is('deal*') ? 'active' : '' }}">
-                    <a href="{{ url('/deal') }}" class="menu-link">
-                        <i class="menu-icon tf-icons ri-archive-line"></i>
-                        <div>Deal</div>
-                    </a>
-                </li>
-                <!-- Forms -->
-                <li class="menu-item {{ request()->is('forms') ? 'active' : '' }}">
-                    <a href="{{ url('/forms') }}" class="menu-link">
-                        <i class="menu-icon tf-icons ri-pages-line"></i>
-                        <div>Forms</div>
+                        <div>Dashboard</div>
                     </a>
                 </li>
             </ul>
@@ -213,4 +176,34 @@
     </div>
 </aside>
 
-        
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  const appUrl = "{{ config('app.url') }}";
+  const modulePrivateView = "{{ \App\Constant\PermissionConstant::MODULE_PRIVATE_VIEW }}";
+
+  document.addEventListener('DOMContentLoaded', function () {
+    axios.get(`${appUrl}/check-permissions`)        
+    .then(function (response) {
+        const data = response.data;
+        const corePermissions = data.core_permission;
+        const sharingPermissions = data.data_sharing_permission;
+        const menuItems = document.getElementById('menu-items');
+
+        corePermissions.forEach(module => {
+            if (module.permission_name !== modulePrivateView || sharingPermissions.some(sp => sp.module_id === module.module_id && sp.permission_name !== modulePrivateView)) {
+                const menuItem = document.createElement('li');
+                menuItem.className = `menu-item ${window.location.pathname.includes(module.module_name.toLowerCase()) ? 'active' : ''}`;
+                menuItem.innerHTML = `
+                    <a href="/${module.module_name.toLowerCase()}" class="menu-link">
+                        <i class="menu-icon tf-icons ri-layout-2-line"></i>
+                        <div>${module.module_name}</div>
+                    </a>`;
+                menuItems.appendChild(menuItem);
+            }
+        });
+    })
+    .catch(function (error) {
+        console.error('Error fetching permissions:', error);
+    });
+});
+</script>

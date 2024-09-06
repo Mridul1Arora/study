@@ -9,6 +9,7 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Activitylog\Models\Activity;
+use App\Constant\PermissionConstant;
 use DB;
 
 class RoleRepository implements RoleRepositoryInterface 
@@ -118,7 +119,7 @@ class RoleRepository implements RoleRepositoryInterface
 
     public function getmodulerelatedPermissoin() {
         $moduleSpecificPermissions = DB::table('core_permissions')
-            ->where('module_specific', 1)
+            ->where('module_specific', PermissionConstant::MODULE_SPECIFIC)
             ->select('name', 'id')
             ->get();
         return $moduleSpecificPermissions;
@@ -152,7 +153,7 @@ class RoleRepository implements RoleRepositoryInterface
                 'to_role.name as to_role_name',
                 'to_role.id as to_role_id'
             )
-            ->where('core_permissions.module_specific', 1)
+            ->where('core_permissions.module_specific', PermissionConstant::MODULE_SPECIFIC)
             ->get();
     
         $formattedData = [];
@@ -177,7 +178,7 @@ class RoleRepository implements RoleRepositoryInterface
     {
         $data['core_permission'] = DB::table('core_permissions')
             ->select(['id','name'])
-            ->where('core_permissions.module_specific', 1)->get();
+            ->where('core_permissions.module_specific', PermissionConstant::MODULE_SPECIFIC)->get();
 
         $data['roles'] = DB::table('roles')->select(['id','name'])->get();
 
