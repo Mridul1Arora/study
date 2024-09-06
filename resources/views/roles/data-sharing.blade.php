@@ -16,90 +16,98 @@
                         <th>Default Access</th>
                     </tr>
                 </thead>
-                <tbody class="table-border-bottom-0">
-                    @foreach($modulepermission->toArray() as $item) 
-                        <tr>
-                            <td>
-                                <a href="#" 
-                                   class="open-modal" 
-                                   data-bs-toggle="modal" 
-                                   data-bs-target="#modalTop"
-                                   data-module-name="{{ $item->module_name }}"
-                                   data-module-id="{{ $item->module_id }}">
-                                    <span class="fw-medium">{{ $item->module_name }}</span>
-                                </a>
-                            </td>
-                            <td>{{ ucfirst($item->permission_name) }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-
-
-
-
-@foreach($modulepermission->toArray() as $item)  
-    <div class="card custom-spacing">
-        <div class="card-header flex-column flex-md-row border-bottom">
-            <div class="head-label text-center">
-                <h5 class="card-title mb-0">{{ $item->module_name }}</h5>
-            </div>
-            <div class="dt-action-buttons text-end pt-3 pt-md-0">
-                <div class="dt-buttons btn-group flex-wrap">
-                    <button type="button" class="btn btn-primary waves-effect waves-light" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#basicModal" 
-                            data-module-id="{{ $item->module_id }}">
-                        Add New Rule
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="card-datatable table-responsive pt-0">
-            <table class="datatables-basic table table-bordered dataTable no-footer">
-                <thead>
-                    <tr>
-                        <th>Rule Name</th>
-                        <th>Shared From</th>
-                        <th>Shared To</th>
-                        <th>Permission</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach($dataSharingRules as $module_id => $module)
-                    @if(!empty($module && $module_id === $item->module_id))
-                        @foreach($module as $rule)
+                @if(!empty($modulepermission))
+                    <tbody class="table-border-bottom-0">
+                        @foreach($modulepermission->toArray() as $item) 
                             <tr>
-                                <td>{{ $rule['rule_name'] }}</td>
-                                <td>{{ $rule['from_role'] }}</td>
-                                <td>{{ $rule['to_role'] }}</td>
-                                <td>{{ $rule['permission_name'] }}</td>
                                 <td>
-                                <button class="btn btn-sm btn-info" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#basicModal"
-                                        data-rule-name="{{ $rule['rule_name'] }}"
-                                        data-from-role="{{ $rule['from_role'] }}"
-                                        data-to-role="{{ $rule['to_role'] }}"
-                                        data-permission="{{ $rule['permission_name'] }}">
-                                    Edit
-                                </button>
-
-                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                    <a href="#" 
+                                    class="open-modal" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modalTop"
+                                    data-module-name="{{ $item->module_name }}"
+                                    data-module-id="{{ $item->module_id }}">
+                                        <span class="fw-medium">{{ $item->module_name }}</span>
+                                    </a>
                                 </td>
+                                <td>{{ ucfirst($item->permission_name) }}</td>
                             </tr>
                         @endforeach
-                    @endif    
-                @endforeach
-                </tbody>
+                    </tbody>
+                @endif    
             </table>
         </div>
     </div>
-    @endforeach
+
+
+
+
+@if(!empty($modulepermission))
+    @foreach($modulepermission->toArray() as $item)  
+        <div class="card custom-spacing">
+            <div class="card-header flex-column flex-md-row border-bottom">
+                <div class="head-label text-center">
+                    <h5 class="card-title mb-0">{{ $item->module_name }}</h5>
+                </div>
+                <div class="dt-action-buttons text-end pt-3 pt-md-0">
+                    <div class="dt-buttons btn-group flex-wrap">
+                        <button type="button" class="btn model-btn btn-primary waves-effect waves-light" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#basicModal" 
+                                data-module-id="{{ $item->module_id }}">
+                            Add New Rule
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-datatable table-responsive pt-0">
+                <table class="datatables-basic table table-bordered dataTable no-footer">
+                    <thead>
+                        <tr>
+                            <th>Rule Name</th>
+                            <th>Shared From</th>
+                            <th>Shared To</th>
+                            <th>Permission</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($dataSharingRules as $module_id => $module)
+                        @if(!empty($module && $module_id === $item->module_id))
+                            @foreach($module as $rule)
+                                <tr>
+                                    <td>{{ $rule['rule_name'] }}</td>
+                                    <td>{{ $rule['from_role'] }}</td>
+                                    <td>{{ $rule['to_role'] }}</td>
+                                    <td>{{ $rule['permission_name'] }}</td>
+                                    <td>
+    
+                                    <button type="button" class="btn model-btn btn-sm btn-info" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#basicModal"
+                                            data-rule-name="{{ $rule['rule_name'] }}"
+                                            data-from-role="{{ $rule['from_role'] }}"
+                                            data-to-role="{{ $rule['to_role'] }}"
+                                            data-permission="{{ $rule['permission_name'] }}"
+                                            data-rule_id="{{ $rule['rule_id'] }}"
+                                            data-module-id="{{ $item->module_id }}">
+                                        Edit
+                                    </button>
+                                        <button class="btn btn-sm btn-danger"
+                                        data-rule_id="{{ $rule['rule_id'] }}"
+                                        data-action="delete">
+                                        Delete</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif    
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        @endforeach
+    @endif
 </div>
 
 
@@ -109,12 +117,16 @@
 <div class="modal fade" id="basicModal" tabindex="-1" style="display: none;" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
+    <form id="updateDataSharingRule">
+        @csrf
       <div class="modal-header">
         <h4 class="modal-title" id="exampleModalLabel">Sharing Rule</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="row">
+        <input type="hidden" id="ruleId" name="ruleId">
+        <input type="hidden" id="moduleId" name="moduleId">
           <div class="col mb-6 mt-2">
             <div class="form-floating form-floating-outline">
               <input type="text" id="sharingRuleName" class="form-control" placeholder="Enter Sharing Rule Name">
@@ -158,8 +170,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary waves-effect" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary waves-effect waves-light">Save</button>
+        <button type="button" id="saveButton" class="btn btn-primary waves-effect waves-light">Save</button>
       </div>
+</form>
     </div>
   </div>
 </div>
@@ -262,19 +275,38 @@ $(document).ready(function() {
 });
 </script>
 
-
 <script>
-
 $(document).ready(function() {
-    $('.btn-primary[data-bs-target="#basicModal"]').on('click', function() {
+    $(document).on('click', '.model-btn[data-bs-target="#basicModal"]', function() {
         let moduleId = $(this).data('module-id'); 
+
+        if ($(this).data('rule-name')) {
+            let ruleName = $(this).data('rule-name');
+            let fromRole = $(this).data('from-role');
+            let toRole = $(this).data('to-role');
+            let permission = $(this).data('permission');
+
+            console.log('Edit Mode:', ruleName, fromRole, toRole, permission);
+
+            // Populate form fields with the data
+            $('#sharingRuleName').val(ruleName);
+            $('#dataSharedFrom').val(fromRole);
+            $('#dataSharedTo').val(toRole);
+            $('#permission').val(permission);
+        } else {
+            console.log('Add Mode');
+            $('#sharingRuleName').val('');
+            $('#dataSharedFrom').val('');
+            $('#dataSharedTo').val('');
+            $('#permission').val('');
+        }
 
         $.ajax({
             url: "{{ route('role.getPermissionsByModule') }}",
             type: "GET",
             data: { module_id: moduleId },
             success: function(response) {
-                if(response) {
+                if (response) {
                     populateRoles(response.roles);
                     populatePermissions(response.core_permission);
                 } else {
@@ -327,32 +359,82 @@ $(document).ready(function() {
 });
 </script>
 
+
 <script>
 
-document.addEventListener('DOMContentLoaded', function () {
-    const modal = document.getElementById('basicModal');
-    
-    // Listen for clicks on Edit buttons
-    document.querySelectorAll('.btn-info').forEach(button => {
-        button.addEventListener('click', function () {
-            // Get rule data from button attributes
-            const ruleName = this.getAttribute('data-rule-name');
-            const fromRole = this.getAttribute('data-from-role');
-            const toRole = this.getAttribute('data-to-role');
-            const permission = this.getAttribute('data-permission');
-            console.log(ruleName,fromRole,toRole,permission);
-            // Populate modal fields
-            document.getElementById('sharingRuleName').value = ruleName;
-            document.getElementById('dataSharedFrom').value = fromRole;
-            document.getElementById('dataSharedTo').value = toRole;
-            document.getElementById('permission').value = permission;
-        });
+$(document).ready(function() {
+   
+    $(document).on('click', '.model-btn', function() {
+        let ruleId = $(this).data('rule_id') || '';
+        let moduleId = $(this).data('module-id') || ''; 
+        let ruleName = $(this).data('rule-name') || '';
+        let fromRole = $(this).data('from-role') || '';
+        let toRole = $(this).data('to-role') || '';
+        let permission = $(this).data('permission') || '';
+
+       
+        $('#ruleId').val(ruleId); 
+        $('#moduleId').val(moduleId);
+        $('#sharingRuleName').val(ruleName);
+        $('#dataSharedFrom').val(fromRole);
+        $('#dataSharedTo').val(toRole);
+        $('#permission').val(permission);
+
+        if (ruleId) {
+            $('#exampleModalLabel').text('Edit Sharing Rule');
+        } else {
+            $('#exampleModalLabel').text('Add New Sharing Rule');
+        }
+    });
+
+    $(document).on('click', '#saveButton', function() {
+        let ruleId = $('#ruleId').val(); 
+        let moduleId = $('#moduleId').val(); 
+        let ruleName = $('#sharingRuleName').val();
+        let fromRole = $('#dataSharedFrom').val();
+        let toRole = $('#dataSharedTo').val();
+        let permission = $('#permission').val();
+
+        if (ruleName && fromRole && toRole && permission) {
+            let ajaxData = {
+                _token: "{{ csrf_token() }}",
+                rule_name: ruleName,
+                from_role: fromRole,
+                to_role: toRole,
+                permission: permission
+            };
+
+            if (ruleId) {
+                ajaxData.rule_id = ruleId;
+            }
+
+            if (moduleId) {
+                ajaxData.module_id = moduleId;
+            }
+
+            $.ajax({
+                url: "{{ route('role.updateDataSharingRule') }}",  
+                type: "POST",
+                data: ajaxData,
+                success: function(response) {
+                    if (response.success) {
+                        location.reload(); 
+                    } else {
+                        alert('Failed to update rule: ' + response.message);
+                    }
+                },
+                error: function(xhr) {
+                    console.error('An error occurred:', xhr.responseText);
+                }
+            });
+        } else {
+            alert('Please fill out all fields');
+        }
     });
 });
 
 
-</script>
-
+    </script>
 
 
 

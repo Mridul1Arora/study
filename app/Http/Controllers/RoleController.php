@@ -143,8 +143,22 @@ class RoleController extends Controller
         }
     }
 
-    public function updateDataSharingRule() {
-        dd(2323);
+    public function updateDataSharingRule(Request $request) {
+        if(!empty($request->all())){
+            $ruleName = $request->all()['rule_name'];
+            $fromRole = $request->all()['from_role'];
+            $toRole = $request->all()['to_role'];
+            $permission = $request->all()['permission'];
+            $moduleId = ($request->all()['module_id'])??'';
+            $ruleId = ($request->all()['rule_id'])??'';
+            
+            $respose = $this->roleRepository->updateRuleSetting($ruleName,$fromRole, $toRole, $permission, $moduleId, $ruleId);
+
+            if($respose) {
+                return ['success' => 'Successfully Updated'];
+            }
+
+        }
     }
 
     public function getPermissionsByModule(Request $request)

@@ -3,9 +3,11 @@
 @section('title', 'role-info')
 
 @section('content')
+<a href="{{ route('roles.data-sharing') }}" class="custom-spacing btn btn-primary waves-effect waves-light" id="data-sharing-btn">
+    Data Sharing settings
+</a>
 
-
-    <div class="card custom-spacing role-details-table mb-6">
+    <div class="card  role-details-table mb-6">
         <div class="card-body">
             <h5 class="card-header">Role Details:</h5>
             <ul class="list-unstyled my-3 py-1">

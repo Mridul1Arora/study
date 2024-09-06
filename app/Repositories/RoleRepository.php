@@ -141,6 +141,7 @@ class RoleRepository implements RoleRepositoryInterface
             ->join('core_permissions', 'role_data_sharing_map.core_permission_id', '=', 'core_permissions.id')
             ->join('modules', 'role_data_sharing_map.module_id', '=', 'modules.id')
             ->select(
+                'role_data_sharing_map.id as rule_id',
                 'role_data_sharing_map.module_id',
                 'role_data_sharing_map.rule_name',
                 'modules.module_name as module_name',
@@ -158,6 +159,7 @@ class RoleRepository implements RoleRepositoryInterface
 
         foreach ($data as $item) {
             $formattedData[$item->module_id][] = [
+                'rule_id' => $item->rule_id,
                 'module_name' => $item->module_name,
                 'rule_name' => $item->rule_name,
                 'permission_name' => $item->permission_name,
@@ -182,5 +184,28 @@ class RoleRepository implements RoleRepositoryInterface
         return $data;
     }
 
-    
+    public function updateRuleSetting($ruleName,$fromRole, $toRole, $permissionId, $moduleId, $ruleId) 
+    {
+        $res='';
+        if ($ruleId) {
+            $res = DB::table('role_data_sharing_map')
+                ->where('id', $ruleId)
+                ->update([
+                    'rule_name' => $ruleName,
+                    'role_id_from' => $fromRole,
+                    'role_id_to' => $toRole,
+                    'core_permission_id' => $permissionId,
+                ]);
+        } else {
+            $res = DB::table('role_data_sharing_map')
+                ->insert([
+                    'rule_name' => $ruleName,
+                    'role_id_from' => $fromRole,
+                    'role_id_to' => $toRole,
+                    'core_permission_id' => $permissionId,
+                    'module_id' => $moduleId,
+                ]);
+        }
+        return $res;
+    }
 }
