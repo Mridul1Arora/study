@@ -118,6 +118,19 @@ class RoleController extends Controller
         ]);
     }
 
+    public function showRuleDetails() {
+        $modulepermission = $this->roleRepository->getmodulepermissions();
+        $moduleSpecificPermissions = $this->roleRepository->getmodulerelatedPermissoin();
+        $dataSharingRules = $this->roleRepository->getDataSharingRules();
+
+        return view('roles.data-sharing', [
+            'modulepermission' => $modulepermission,
+            'moduleSpecificPermissions' => $moduleSpecificPermissions,
+            'dataSharingRules' => $dataSharingRules
+        ]);
+
+    }
+
     public function updateCorePermission(Request $request){
         if(!empty($request->all())){
             $corPermissoinId = $request->all()['permission_id'];
