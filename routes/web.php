@@ -15,13 +15,23 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Route::get('lead', function () {
-    //     return view('pages/lead');
-    // })->name('lead');
+    Route::get('lead', [LeadController::class,'index'])->name('lead');
 
-    // Route::get('lead/id', function () {
-    //     return view('pages/lead-id');
-    // })->name('lead-id');
+    Route::get('lead/id', function () {
+        return view('pages/lead-id');
+    })->name('lead-id');
+
+    Route::get('get-lead-details/{id}',[LeadController::class,'getLead']);
+    
+    Route::get('/import', [LeadController::class, 'import'])->name('leads.import');
+
+    Route::get('/leads/data',[LeadController::class,'getLeads']);
+
+    Route::post('lead/update',[LeadController::class,'update'])->name('leads.update');
+
+    Route::delete('/leads/{id}', [LeadController::class, 'destroy'])->name('leads.destroy');
+
+    Route::post('lead',[LeadController::class,'create'])->name('leads.create');
 
     Route::get('contact', function () {
         return view('pages/contact');
@@ -73,18 +83,18 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::middleware(['auth', 'can:view lead'])->group(function () {
+// Route::middleware(['auth', 'can:view lead'])->group(function () {
 
 
 
-    Route::get('lead', function () {
-        return view('pages/lead');
-    })->name('lead');
+//     Route::get('lead', function () {
+//         return view('pages/lead');
+//     })->name('lead');
 
-    Route::get('lead/id', function () {
-        return view('pages/lead-id');
-    })->name('lead-id');
-});
+//     Route::get('lead/id', function () {
+//         return view('pages/lead-id');
+//     })->name('lead-id');
+// });
 
 
 // Publicly accessible routes (Login, Register, Welcome page)

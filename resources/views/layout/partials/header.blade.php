@@ -1,4 +1,5 @@
 
+
 <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
           <div class="container-xxl">
             <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-6">
@@ -174,7 +175,7 @@
                 <!-- Lead -->
 
                
-              @can('view users')
+              @can('view lead')
                 <li class="menu-item {{ request()->is('lead*') ? 'active' : '' }}">
                     <a href="{{ url('/lead') }}" class="menu-link">
                         <i class="menu-icon tf-icons ri-layout-2-line"></i>

@@ -17,14 +17,14 @@ document.addEventListener('DOMContentLoaded', function (e) {
       if (newRecord) {
         newRecord.addEventListener('click', function () {
           offCanvasEl = new bootstrap.Offcanvas(offCanvasElement);
+          offCanvasEl.show();
           // Empty fields on offCanvas open
-          (offCanvasElement.querySelector('.dt-full-name').value = ''),
+            (offCanvasElement.querySelector('.dt-full-name').value = ''),
             (offCanvasElement.querySelector('.dt-post').value = ''),
             (offCanvasElement.querySelector('.dt-email').value = ''),
             (offCanvasElement.querySelector('.dt-date').value = ''),
             (offCanvasElement.querySelector('.dt-salary').value = '');
           // Open offCanvas with form
-          offCanvasEl.show();
         });
       }
     }, 200);
@@ -458,7 +458,7 @@ $(function () {
   var count = 101;
   // On form submit, if form is valid
   fv.on('core.form.valid', function () {
-    var $new_name = $('.add-new-record .dt-full-name').val(),
+    // var $new_name = $('.add-new-record .dt-full-name').val(),
       $new_post = $('.add-new-record .dt-post').val(),
       $new_email = $('.add-new-record .dt-email').val(),
       $new_date = $('.add-new-record .dt-date').val(),
