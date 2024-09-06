@@ -360,10 +360,9 @@ $(document).ready(function() {
 </script>
 
 
-<script>
 
+<script>
 $(document).ready(function() {
-   
     $(document).on('click', '.model-btn', function() {
         let ruleId = $(this).data('rule_id') || '';
         let moduleId = $(this).data('module-id') || ''; 
@@ -372,7 +371,6 @@ $(document).ready(function() {
         let toRole = $(this).data('to-role') || '';
         let permission = $(this).data('permission') || '';
 
-       
         $('#ruleId').val(ruleId); 
         $('#moduleId').val(moduleId);
         $('#sharingRuleName').val(ruleName);
@@ -431,7 +429,34 @@ $(document).ready(function() {
             alert('Please fill out all fields');
         }
     });
+
+    $(document).on('click', '.btn-danger', function() {
+        let ruleId = $(this).data('rule_id');
+        
+        if (confirm('Are you sure you want to delete this rule?')) {
+            $.ajax({
+                url: "{{ route('role.deleteDataSharingRule') }}",  
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    rule_id: ruleId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload(); 
+                    } else {
+                        alert('Failed to delete rule: ' + response.message);
+                    }
+                },
+                error: function(xhr) {
+                    console.error('An error occurred:', xhr.responseText);
+                }
+            });
+        }
+    });
 });
+</script>
+
 
 
     </script>

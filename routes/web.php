@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/role/update-permission', [RoleController::class, 'updateCorePermission'])->name('role.updateCorePermission');
 
     Route::post('/role/update-rule', [RoleController::class, 'updateDataSharingRule'])->name('role.updateDataSharingRule');
+    Route::post('/role/delete-rule', [RoleController::class, 'deleteDataSharingRule'])->name('role.deleteDataSharingRule');
+
     Route::get('/role/get-permissions-by-module', [RoleController::class, 'getPermissionsByModule'])->name('role.getPermissionsByModule');
 
 

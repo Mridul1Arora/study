@@ -161,6 +161,16 @@ class RoleController extends Controller
         }
     }
 
+    public function deleteDataSharingRule(Request $request) {
+        $ruleId = $request->input('rule_id');
+        if($ruleId) {
+            $res  =  $this->roleRepository->deleteRules($ruleId);
+            if($res) {
+                return ['success' => 'Successfully deleted'];
+            }
+        }
+    }
+
     public function getPermissionsByModule(Request $request)
     {
         $moduleId = $request->input('module_id');

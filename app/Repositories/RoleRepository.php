@@ -187,6 +187,7 @@ class RoleRepository implements RoleRepositoryInterface
     public function updateRuleSetting($ruleName,$fromRole, $toRole, $permissionId, $moduleId, $ruleId) 
     {
         $res='';
+        $currentTimestamp = now();
         if ($ruleId) {
             $res = DB::table('role_data_sharing_map')
                 ->where('id', $ruleId)
@@ -195,6 +196,7 @@ class RoleRepository implements RoleRepositoryInterface
                     'role_id_from' => $fromRole,
                     'role_id_to' => $toRole,
                     'core_permission_id' => $permissionId,
+                    'updated_at' => $currentTimestamp,
                 ]);
         } else {
             $res = DB::table('role_data_sharing_map')
@@ -204,8 +206,16 @@ class RoleRepository implements RoleRepositoryInterface
                     'role_id_to' => $toRole,
                     'core_permission_id' => $permissionId,
                     'module_id' => $moduleId,
+                    'created_at' => $currentTimestamp,
+                    'updated_at' => $currentTimestamp,
                 ]);
         }
         return $res;
+    }
+
+    public function deleteRules($ruleId) 
+    {
+        $deleted = DB::table('role_data_sharing_map')->where('id', $ruleId)->delete();
+        return $deleted;
     }
 }
