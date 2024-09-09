@@ -4,10 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\AccessController;
-
-
-
 
 
 
@@ -15,8 +11,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('pages/dashboard');
     })->middleware('verified')->name('dashboard');
-
-    Route::get('/check-permissions', [AccessController::class, 'getModuleCorePermissoins']);
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -46,38 +40,13 @@ Route::middleware('auth')->group(function () {
     Route::post('roles/permission/create', [RoleController::class, 'permisssionCreate'])->name('per.create');
 
 
-
-    Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
-    Route::get('/leads/create', [LeadController::class, 'create'])->name('leads.create');
-    Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
-    Route::get('/leads/{lead_id}', [LeadController::class, 'show'])->name('leads.show');
-    Route::get('/leads/{lead_id}/edit', [LeadController::class, 'edit'])->name('leads.edit');
-    Route::put('/leads/{lead_id}', [LeadController::class, 'update'])->name('leads.update');
-    Route::get('/leads/delete/{lead_id}', [LeadController::class, 'destroy'])->name('leads.destroy');
-
-
-
-    // Route::get('lead', function () {
-    //     return view('pages/lead');
-    // })->name('lead');
-
-    // Route::get('lead/id', function () {
-    //     return view('pages/lead-id');
-    // })->name('lead-id');
-
+    
     Route::get('/user' ,[UserController::class, 'index'])->name('user');
 
-    Route::get('contact', function () {
-        return view('pages/contact');
-    })->name('contact');
-
-    Route::get('deal', function () {
-        return view('pages/deal');
-    })->name('deal');
-
-    // Route::get('roles', function () {
-    //     return view('pages/roles');
-    // })->name('roles');
+   
+    Route::get('roles', function () {
+        return view('pages/roles');
+    })->name('roles');
 
     Route::get('permission', function () {
         return view('pages/permission');
@@ -119,19 +88,31 @@ Route::middleware('auth')->group(function () {
         return view('layout/partials/kanban');
     });
 
-
-
 });
 
 
-Route::middleware(['auth', 'can:view lead'])->group(function () {
-    Route::get('lead', function () {
-        return view('pages/lead');
-    })->name('lead');
+//check module permission
+Route::middleware(['auth','check_module_permission'])->group(function () {
+    Route::get('/lead', [LeadController::class, 'index'])->name('leads.index');
+    Route::get('/lead/create', [LeadController::class, 'create'])->name('leads.create');
+    Route::post('/lead', [LeadController::class, 'store'])->name('leads.store');
+    Route::get('/lead/{lead_id}', [LeadController::class, 'show'])->name('leads.show');
+    Route::get('/lead/{lead_id}/edit', [LeadController::class, 'edit'])->name('leads.edit');
+    Route::put('/lead/{lead_id}', [LeadController::class, 'update'])->name('leads.update');
+    Route::get('/lead/delete/{lead_id}', [LeadController::class, 'destroy'])->name('leads.destroy');
 
     Route::get('lead/id', function () {
         return view('pages/lead-id');
     })->name('lead-id');
+
+    Route::get('contact', function () {
+        return view('pages/contact');
+    })->name('contact');
+
+    Route::get('deal', function () {
+        return view('pages/deal');
+    })->name('deal');
+
 });
 
 

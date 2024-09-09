@@ -1,14 +1,41 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Middleware;
 
-use DB;
+use Closure;
+use Illuminate\Support\Facades\Session;
 use App\Constant\PermissionConstant;
-use Illuminate\Http\Request;
 
-class AccessController extends Controller
+
+class CheckModulePermissions
 {
-    public function getModuleCorePermissoins() {
+    public function handle($request, Closure $next)
+    {
+        if (!session()->has('permissions_data')) {
+            $this->setModuleCorePermissoins();
+        }
+
+        $corePermissions = session('permissions_data.core_permission', []);
+        $sharingPermissions = session('permissions_data.data_sharing_permission', []);
+        $modulePrivateView = PermissionConstant::MODULE_PRIVATE_VIEW;
+
+        $currentModule = strtolower($request->segment(1));
+
+        $hasPermission = collect($corePermissions)->some(function ($module) use ($currentModule, $modulePrivateView, $sharingPermissions) {
+            return (strtolower($module->module_name) === $currentModule &&
+                    ($module->permission_name !== $modulePrivateView ||
+                     collect($sharingPermissions)->some(fn($sp) => $sp->module_id == $module->module_id && $sp->permission_name !== $modulePrivateView)));
+        });
+
+        if (!$hasPermission) {
+
+            return redirect()->route('dashboard')->withErrors(['You do not have permission to access this route.']);
+        }
+
+        return $next($request);
+    }
+
+    public function setModuleCorePermissoins() {
 
         $user_role_id = auth()->user()->roles()->first()->pivot['role_id'];
 
@@ -39,3 +66,4 @@ class AccessController extends Controller
             session(['permissions_data' => $data]);
     }
 }
+
