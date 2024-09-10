@@ -382,7 +382,7 @@
                 </div>
               </div>
             </td>
-            <td><span>{{auth()->user()->email}}</span></td>
+            <td><span>{{auth()->user()->name}}</span></td>
             <td><span class="text-truncate d-flex align-items-center text-heading"><i class="ri-user-line ri-22px text-primary me-2"></i>Subscriber</span></td>
             <td><span class="badge rounded-pill bg-label-secondary" text-capitalized="">{{auth()->user()->active ? 'active' : 'deactive'}}</span></td>
             <td>

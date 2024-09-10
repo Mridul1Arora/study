@@ -3,8 +3,13 @@
 @section('title', 'role-info')
 
 @section('content')
-<a href="{{ route('roles.data-sharing') }}" class="custom-spacing btn btn-primary waves-effect waves-light" id="data-sharing-btn">
-    Data Sharing settings
+
+@php
+    $roleId = request()->route('id');
+@endphp
+
+<a href="{{ route('roles.add-new-permission', ['id' => $roleId]) }}" class="custom-spacing btn btn-primary waves-effect waves-light" id="update-role-permission">
+    Add New Permission
 </a>
 
     <div class="card  role-details-table mb-6">

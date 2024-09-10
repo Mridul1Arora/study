@@ -23,8 +23,7 @@ class RoleRepository implements RoleRepositoryInterface
 
     public function all()
     {
-        $role_id = auth()->user()->id;
-        return $this->model->find($role_id);
+        return $this->model->all();
        
     }
     public function find($id)
@@ -218,5 +217,61 @@ class RoleRepository implements RoleRepositoryInterface
     {
         $deleted = DB::table('role_data_sharing_map')->where('id', $ruleId)->delete();
         return $deleted;
+    }
+
+    public function addNewRoles($role_name, $reporting_role, $description) 
+    {
+        $role = new Role();
+        $role->name = $role_name;
+        $role->parent_id = $reporting_role;
+        $role->desc = $description;
+        $role->save();
+
+        return $role;
+    }
+
+    public function getAllRolePermissions() {
+        $data['roles'] = Role::all();
+        $data['permissions'] = DB::table('permissions')->select(['id','name'])->get();
+
+        return $data;
+       
+    }
+
+    public function getRoleRelatedPermission($id)
+    {
+        $data['roleData'] = Role::find($id);
+        $data['relatedPermission'] = DB::table('role_has_permissions')
+            ->where('role_id', $id)
+            ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
+            ->select(['permissions.id','permissions.name'])
+            ->get();
+           
+        $relatedPermissionIds = $data['relatedPermission']->pluck('id')->toArray();
+
+        $data['allPermissions'] = DB::table('permissions')
+            ->whereNotIn('id', $relatedPermissionIds)
+            ->select(['id', 'name'])
+            ->get(); 
+   
+        return $data;
+    }
+
+    public function updatePermissionForRole($role_id,$related_permissions, $new_permissions)
+    {
+
+        $role = Role::findOrFail($role_id);
+
+        if (!empty($related_permissions)) {
+           // $role->permissions()->sync($related_permissions);       
+        }
+
+        if (!empty($new_permissions)) {
+            foreach ($new_permissions as $permissionId) {
+dump($permissionId);
+            }
+        }
+
+        return response()->json(['success' => 'Permissions updated successfully']);
     }
 }

@@ -12,6 +12,11 @@ Route::middleware('auth')->group(function () {
         return view('pages/dashboard');
     })->middleware('verified')->name('dashboard');
 
+    Route::get('/users' ,[UserController::class, 'index'])->name('users.index');
+
+    Route::get('/users-data', [UserController::class, 'getUsers'])->name('users.data');
+
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -22,10 +27,23 @@ Route::middleware('auth')->group(function () {
     Route::get('roles/show/{id}', [RoleController::class, 'showRoleDetails'])->name('roles.details');
     Route::get('roles/data-sharing',[RoleController::class, 'showRuleDetails'])->name('roles.data-sharing');
 
+    Route::get('roles/add-new-permission/{id}',[RoleController::class, 'addNewPermissions'])->name('roles.add-new-permission');
+    Route::post('/roles/update-role-permission', [RoleController::class, 'updateRolePermission'])->name('roles.updateRolePermission');
+
+
+
+    Route::get('roles/role-permission', [RoleController::class, 'rolePermissionData'])->name('roles.role-permission');
+    Route::post('/roles/add-role-permission', [RoleController::class, 'addRolePermission'])->name('roles.addRolePermission');
+
+
+
     Route::post('/role/update-permission', [RoleController::class, 'updateCorePermission'])->name('role.updateCorePermission');
 
     Route::post('/role/update-rule', [RoleController::class, 'updateDataSharingRule'])->name('role.updateDataSharingRule');
     Route::post('/role/delete-rule', [RoleController::class, 'deleteDataSharingRule'])->name('role.deleteDataSharingRule');
+
+    Route::post('/roles/add-role', [RoleController::class, 'addNewRole'])->name('roles.addNewRole');
+
 
     Route::get('/role/get-permissions-by-module', [RoleController::class, 'getPermissionsByModule'])->name('role.getPermissionsByModule');
 
@@ -41,7 +59,6 @@ Route::middleware('auth')->group(function () {
 
 
     
-    Route::get('/user' ,[UserController::class, 'index'])->name('user');
 
    
     Route::get('roles', function () {
@@ -93,6 +110,7 @@ Route::middleware('auth')->group(function () {
 
 //check module permission
 Route::middleware(['auth','check_module_permission'])->group(function () {
+
     Route::get('/lead', [LeadController::class, 'index'])->name('leads.index');
     Route::get('/lead/create', [LeadController::class, 'create'])->name('leads.create');
     Route::post('/lead', [LeadController::class, 'store'])->name('leads.store');
@@ -112,6 +130,8 @@ Route::middleware(['auth','check_module_permission'])->group(function () {
     Route::get('deal', function () {
         return view('pages/deal');
     })->name('deal');
+
+
 
 });
 

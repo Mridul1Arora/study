@@ -13,13 +13,6 @@ class UserRepository implements UserRepositoryInterface
 {
     public function getAllUsers() 
     {
-
-
-        activity()->log('Look mum, I logged something');
-        dd($lastActivity = Activity::all()->last());
-        
-        $users = User::find(6);
-        $per = $users->getAllPermissions();
        
         return User::all();
     }

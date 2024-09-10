@@ -79,10 +79,11 @@ class RoleController extends Controller
 
         if ($userRole) {
             $hierarchy = $this->roleRepository->getRoleHierarchy($userRole);
-            return view('roles.role-hierarchy', ['hierarchy' => $hierarchy]);
+            $roles = $this->roleRepository->all();
+            return view('roles.role-hierarchy', ['hierarchy' => $hierarchy, 'roles' => $roles]);
         }
 
-        return view('roles.role-hierarchy', ['hierarchy' => []]);
+        return view('roles.role-hierarchy', ['hierarchy' => [], 'roles' =>[]]);
     }
 
 
@@ -181,4 +182,51 @@ class RoleController extends Controller
         return $data;
     }
 
+    public function addNewRole(Request $request)
+    {
+        if(!empty($request->all())){
+            $role_name = $request->all()['role_name'];
+            $reporting_role = $request->all()['reporting_role'];
+            $description = $request->all()['description'];
+
+            $respose = $this->roleRepository->addNewRoles($role_name,$reporting_role, $description);
+
+            if($respose) {
+                return ['success' => 'Successfully Updated'];
+            }
+        }
+    }
+
+
+    public function rolePermissionData()
+    {
+        $data = $this->roleRepository->getAllRolePermissions();
+        return view('roles.role-permission', compact('data'));
+    }
+
+    public function addRolePermission(Request $request) 
+    {
+        dd($request->all());
+    }
+
+    public function addNewPermissions($id)
+    {
+        $data = $this->roleRepository->getRoleRelatedPermission($id);
+        return view('roles.add-new-permission', compact('data'));
+    }
+
+    public function updateRolePermission(Request $request) 
+    {
+        if(!empty($request->all())){
+            $role_id = $request->all()['role_id'];
+            $related_permissions = ($request->all()['related_permissions'])??[];
+            $new_permissions = ($request->all()['new_permissions'])??[];
+
+            $respose = $this->roleRepository->updatePermissionForRole($role_id,$related_permissions, $new_permissions);
+
+            if($respose) {
+                return ['success' => 'Successfully Updated'];
+            }
+        }
+    }
 }

@@ -7,6 +7,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use App\Contract\UserRepositoryInterface;
+use Yajra\DataTables\DataTables;
 
 
 class UserController extends Controller
@@ -21,9 +22,18 @@ class UserController extends Controller
 
     public function index() 
     {
-        return response()->json([
-            'data' => $this->repository->getAllUsers()
-        ]);
+        $data = $this->repository->getAllUsers();
+        return view('users.index', compact('data'));
+     
     }
 
+    public function getUsers(Request $request)
+    {
+        $users = User::select(['id', 'name', 'email', 'created_at', 'mobile_no', 'active']);
+        return DataTables::of($users)
+            ->addColumn('action', function($row) {
+                return '<a href="#">Edit</a>'; // Customize the action buttons
+            })
+            ->make(true);
+    }
 }

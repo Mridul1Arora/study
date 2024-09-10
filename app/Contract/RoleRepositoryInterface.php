@@ -23,4 +23,8 @@ interface RoleRepositoryInterface
     public function getDataSharingRule($id);
     public function updateRuleSetting($id1,$id2,$id3,$id4,$id5,$id6);
     public function deleteRules($id);
+    public function addNewRoles($id1,$id2, $id3);
+    public function getAllRolePermissions();
+    public function getRoleRelatedPermission($id);
+    public function updatePermissionForRole($id1,$id2,$id3);
 }
