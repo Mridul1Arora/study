@@ -55,17 +55,14 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             $filePath = $attachment->file_path;
 
             if (Storage::disk('wasabi')->exists($filePath)) {
-                // Get the file content
-                $fileContent = Storage::disk('wasabi')->get($filePath);
 
-                // Return a response for downloading the file
-                return response()->make($fileContent, 200, [
-                    'Content-Type' => Storage::disk('wasabi')->mimeType($filePath),
-                    'Content-Disposition' => 'attachment; filename="' . $attachment->file_name . '"',
-                ]);
+                $wasaby_url = env('WASABI_ENDPOINT');
+                $bucketName = env('WASABI_BUCKET');
+                $file_path = $wasaby_url.'/'.$bucketName.'/'.$filePath;
+
+                return ['download_url' => $file_path];
             }
         }
-
         return null;
     }
 
@@ -91,9 +88,10 @@ class AttachmentRepository implements AttachmentRepositoryInterface
                 try {
                     $fileExtension = $file->getClientOriginalExtension();
                     $fileSlugName = $file->getfilename();
+                    $file_folder = env('STORAGE_PATH');
                     $filename = 'lead_'.time().$fileSlugName.'.'.$fileExtension;
-                    $file_path = 'lead-attachments/'.$filename;
-                    $isUploaded = Storage::disk('wasabi')->put($file_path, file_get_contents($file));
+                    $file_path = $file_folder.$filename;
+                    $isUploaded = Storage::disk('wasabi')->put($file_path, file_get_contents($file),'public');
                     if($isUploaded) {
                         $uploadedFile = $this->model->create([
                             'file_name' => $file->getClientOriginalName(),

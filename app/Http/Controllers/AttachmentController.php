@@ -36,7 +36,7 @@ class AttachmentController extends Controller
             case 'DL': //Download
                 $result = $this->repository->downloadFile($fileId);
                 if ($result) {
-                    return response()->json(['download_url' => $result]);
+                    return $result;
                 }
                 return response()->json(['error' => 'File not found'], 404);
             default:
