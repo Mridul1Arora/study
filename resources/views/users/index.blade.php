@@ -5,6 +5,9 @@
 @section('content')
 
 <div class="container-xxl flex-grow-1 container-p-y">
+    <div class="mb-3">
+        <a class="btn btn-primary" href="{{ route('users.add-user') }}">Add New User</a>
+    </div>
     <!-- DataTable with Buttons -->
     <div class="card">
         <div class="card-datatable table-responsive pt-0">
@@ -23,71 +26,9 @@
             </table>
         </div>
     </div>
-    
-    <!-- Modal to add new record -->
-    <div class="offcanvas offcanvas-end" id="add-new-record">
-        <div class="offcanvas-header border-bottom">
-            <h5 class="offcanvas-title" id="exampleModalLabel">New Record</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body flex-grow-1">
-            <form class="add-new-record pt-0 row g-3" id="form-add-new-record" onsubmit="return false">
-                <div class="col-sm-12">
-                    <div class="input-group input-group-merge">
-                        <span id="basicFullname2" class="input-group-text"><i class="ri-user-line ri-18px"></i></span>
-                        <div class="form-floating form-floating-outline">
-                            <input type="text" id="basicFullname" class="form-control" name="name" placeholder="John Doe" />
-                            <label for="basicFullname">Full Name</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="input-group input-group-merge">
-                        <span id="basicEmail2" class="input-group-text"><i class="ri-mail-line ri-18px"></i></span>
-                        <div class="form-floating form-floating-outline">
-                            <input type="email" id="basicEmail" name="email" class="form-control" placeholder="john.doe@example.com" />
-                            <label for="basicEmail">Email</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="input-group input-group-merge">
-                        <span id="basicDate2" class="input-group-text"><i class="ri-calendar-2-line ri-18px"></i></span>
-                        <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control dt-date" id="basicDate" name="date" placeholder="MM/DD/YYYY" />
-                            <label for="basicDate">Joining Date</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="input-group input-group-merge">
-                        <span id="basicMobileNo2" class="input-group-text"><i class="ri-phone-line ri-18px"></i></span>
-                        <div class="form-floating form-floating-outline">
-                            <input type="text" id="basicMobileNo" name="mobile_no" class="form-control" placeholder="Mobile Number" />
-                            <label for="basicMobileNo">Mobile Number</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="input-group input-group-merge">
-                        <span id="basicActive2" class="input-group-text"><i class="ri-checkbox-circle-line ri-18px"></i></span>
-                        <div class="form-floating form-floating-outline">
-                            <select id="basicActive" name="active" class="form-control">
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                            <label for="basicActive">Active Status</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <button type="submit" class="btn btn-primary data-submit me-sm-4 me-1">Submit</button>
-                    <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
+   
 </div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
@@ -106,14 +47,32 @@ $(document).ready(function() {
                 return data == 1 ? 'Active' : 'Inactive';
             }},
             { data: 'action', name: 'action', orderable: false, searchable: false, render: function(data, type, row) {
-                return '<a href="#" class="btn btn-sm btn-primary">Edit</a> <a href="#" class="btn btn-sm btn-danger">Delete</a>';
+                return '<a href="#" class="btn btn-sm btn-primary edit-btn" data-id="'+ row.id +'">Edit</a> <a href="#" class="btn btn-sm btn-danger delete-btn" data-id="'+ row.id +'">Delete</a>';
             }},
         ],
         order: [[0, 'asc']], 
         pageLength: 10,
         lengthMenu: [[10, 25, 50], [10, 25, 50]],
     });
+
+    // Handle Delete Button Click
+    $(document).on('click', '.delete-btn', function() {
+        var userId = $(this).data('id');
+        if (confirm('Are you sure you want to delete this user?')) {
+            $.ajax({
+                url: '/users/' + userId,
+                type: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(result) {
+                    $('.datatables-basic-custom').DataTable().ajax.reload();
+                }
+            });
+        }
+    });
 });
+
 </script>
 
 @endsection

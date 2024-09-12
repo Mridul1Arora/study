@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Activitylog\Models\Activity;
+use DB;
 
 class UserRepository implements UserRepositoryInterface 
 {
@@ -35,5 +36,19 @@ class UserRepository implements UserRepositoryInterface
     public function updateUser(User $user, array $attributes) 
     {
         return $user->update($attributes);
+    }
+
+    public function addNewUser($name,$email, $mobile_no,$active)
+    {
+        $userId = DB::table('users')->insertGetId([
+            'name' => $name,
+            'email' => $email,
+            'mobile_no' => $mobile_no,
+            'active' => $active,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
+        return $userId;
     }
 }
