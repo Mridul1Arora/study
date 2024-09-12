@@ -4,10 +4,21 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\AttachmentController;
 
-
+  
 
 Route::middleware('auth')->group(function () {
+ 
+
+    Route::get('/attachment', [AttachmentController::class, 'index'])->name('attachment.index');
+    Route::get('/attachment/getData', [AttachmentController::class, 'getFilesData'])->name('attachment.data');
+    Route::post('/attachment/upload', [AttachmentController::class, 'upload'])->name('attachment.upload');
+    Route::post('/attachment/action', [AttachmentController::class, 'handleAction'])->name('attachment.action');
+
+
+
+
     Route::get('/dashboard', function () {
         return view('pages/dashboard');
     })->middleware('verified')->name('dashboard');
@@ -15,6 +26,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/users' ,[UserController::class, 'index'])->name('users.index');
 
     Route::get('/users-data', [UserController::class, 'getUsers'])->name('users.data');
+
+    //Route::resource('users', UserController::class);
+
+    Route::get('/users/add-user' ,[UserController::class, 'addNewUser'])->name('users.add-user');
+    Route::post('/users/add-user' ,[UserController::class, 'createNewUser'])->name('users.user-added');
+
 
 
 

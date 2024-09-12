@@ -7,9 +7,8 @@ use App\Contract\UserRepositoryInterface;
 use App\Repositories\UserRepository;
 use App\Contract\RoleRepositoryInterface;
 use App\Repositories\RoleRepository;
-
-
-
+use App\Contract\AttachmentRepositoryInterface;
+use App\Repositories\AttachmentRepository;
 
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -22,7 +21,8 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
-        $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);  
+        $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class); 
+        $this->app->bind(AttachmentRepositoryInterface::class, AttachmentRepository::class);  
     }
 
     /**
