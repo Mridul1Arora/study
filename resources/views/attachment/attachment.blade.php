@@ -9,14 +9,14 @@
 
 <div class="card">
   <h5 class="card-header">Attachments</h5>
-  <div class="table-responsive text-nowrap">
+  <div class="table-responsive text-nowrap" style="max-height: 300px; overflow-y: auto;">
     <table class="table">
       <thead class="table-light">
         <tr>
           <th>File Name</th>
           <th>Attached By</th>
           <th>Date Added</th>
-          <th>Size</th>
+          <th>Size (KB)</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -103,6 +103,11 @@
 
       uploadButton.on('click', function() {
         const files = fileInput.files;
+
+        if (files.length > 10) {
+            alert("You can only upload a maximum of 10 files at a time.");
+            return;
+        }
 
         if (files.length === 0) {
           return;

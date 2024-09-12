@@ -51,10 +51,11 @@ class AttachmentController extends Controller
         ]);
 
         $files = $request->file('files');
+        $lead_id = 1;
 
         if (!empty($files)) {
             try {
-                $uploadedFiles = $this->repository->uploadAttachment($files);
+                $uploadedFiles = $this->repository->uploadAttachment($files,$lead_id);
                 return response()->json(['uploaded_files' => $uploadedFiles], 200);
             } catch (\Exception $e) {
                 return response()->json(['error' => 'File upload failed.'], 500);
@@ -66,8 +67,8 @@ class AttachmentController extends Controller
 
     public function getFilesData()
     {
-        $id = 1;
-        $attachments = $this->repository->getAllFilesDetails($id);
+        $lead_id = 1;
+        $attachments = $this->repository->getAllFilesDetails($lead_id);
         return $attachments;
 
     }

@@ -23,9 +23,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         if ($attachment) {
             // Delete the file from Wasabi storage
             $filePath = $attachment->file_path;
-            if (Storage::disk('wasabi')->exists($filePath)) {
-                Storage::disk('wasabi')->delete($filePath);
-            }
+            Storage::disk('wasabi')->delete($filePath);
 
             // Delete the file record from the database
             $attachment->delete();
@@ -78,10 +76,9 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      return $attachment;
     }
 
-    public function uploadAttachment($files)
+    public function uploadAttachment($files,$lead_id)
     {
         $uploadedFiles = [];
-        $lead_id = 1;
 
         foreach ($files as $file) {
             if ($file instanceof UploadedFile && $file->isValid()) {
@@ -95,7 +92,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
                     if($isUploaded) {
                         $uploadedFile = $this->model->create([
                             'file_name' => $file->getClientOriginalName(),
-                            'file_size' => $file->getSize(),
+                            'file_size' => round($file->getSize() / 1024, 2),
                             'file_path' => $file_path,
                             'lead_id' => $lead_id,
                             'user_id' => auth()->user()->id,
