@@ -157,6 +157,10 @@
 
 <script>
     $(document).ready(function() {
+        const formatTimestamp = (timestamp) => {
+            const date = new Date(timestamp);
+            return date.toISOString().slice(0, 19).replace('T', ' ');
+        };
         function loadAttachments() {
             $.ajax({
                 url: '{{ route("attachment.data") }}',
@@ -167,7 +171,7 @@
                         rows += `<tr>
                             <td>${attachment.file_name}</td>
                             <td>${attachment.name}</td>
-                            <td>${attachment.created_at}</td>
+                            <td>${formatTimestamp(attachment.created_at)}</td>
                             <td>${attachment.file_size}</td>
                             <td>
                             <div class="dropdown">

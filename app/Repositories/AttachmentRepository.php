@@ -73,7 +73,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             ->where('attachments.lead_id', $id)
             ->get();
 
-     return $attachment;
+        return $attachment;
     }
 
     public function uploadAttachment($files,$lead_id)
