@@ -3,6 +3,12 @@
 @section('title', 'University Management')
 
 @section('content')
+@if(empty($data['id']))
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">University Not Found</h4>
+        <p>The requested university does not exist. Please go back to the <a href="{{ url('/university') }}">university list</a> or contact support if you think this is an error.</p>
+    </div>
+@else
 <div class="card custom-spacing mb-6">
     <div class="card-body">
         <div class="d-flex align-items-start align-items-sm-center gap-6">
@@ -354,4 +360,5 @@ document.getElementById('confirmDelete').addEventListener('change', function() {
     deleteButton.disabled = !this.checked;
 });
 </script>
+@endif
 @endsection

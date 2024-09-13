@@ -17,7 +17,6 @@ class UserController extends Controller
      {
         $this->repository = $repository;
      }
-   
 
     public function index() 
     {
