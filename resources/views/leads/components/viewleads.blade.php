@@ -24,8 +24,8 @@
         <i class="ri-more-2-line"></i>
       </a>
       <ul class="dropdown-menu dropdown-menu-end m-0">
-        <li><a href="/get-lead-details/{{ $lead->_id }}" class="dropdown-item">Details</a></li>
-        <li><button class="dropdown-item" onClick="openModal('{{ $lead->_id }}')" data-bs-toggle="modal" data-bs-target="#editDetailsModal">Edit</button></li>
+        <li><a href="/get-lead-details/{{ $lead->id }}" class="dropdown-item">Details</a></li>
+        <li><button class="dropdown-item" onClick="openModal('{{ $lead->id }}')" data-bs-toggle="modal" data-bs-target="#editDetailsModal">Edit</button></li>
         <li><button onClick="deleteLead('{{ $lead->id }}')" class="dropdown-item delete-lead">Delete</button></li>
       </ul>
     </div>

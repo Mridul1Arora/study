@@ -2,16 +2,18 @@
 
 namespace App\Repositories;
 use App\Contract\LeadRepositoryInterface;
-use App\Models\LeadModel;
+use App\Models\Lead;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Services\ElasticServices\ElasticQueryHandler;
 use App\Services\ElasticServices\ElasticConstants;
+use App\Models\CallLog;
+use App\Models\Note;
 
 
 class LeadRepository implements LeadRepositoryInterface{
 
-    public function __construct(LeadModel $lead,ElasticQueryHandler $handle){
+    public function __construct(Lead $lead,ElasticQueryHandler $handle){
         $this->model = $lead;
         $this->elastic = $handle;
     }
@@ -60,14 +62,14 @@ class LeadRepository implements LeadRepositoryInterface{
             print_r($errors);die;
         }
         else{
-            $lead_id = LeadModel::create($data);
+            $lead_id = Lead::create($data);
             return $lead_id;
         }
 
     }
 
     public function update($updated_fields,$id){
-        $update = LeadModel::where('_id',$id)->update($updated_fields);
+        $update = Lead::where('id',$id)->update($updated_fields);
         if($update){
             return true;
         }
@@ -81,7 +83,7 @@ class LeadRepository implements LeadRepositoryInterface{
     }
 
     public function delete($id){
-        $lead = LeadModel::find($id);
+        $lead = Lead::where('id', (int)$id)->first();
         if ($lead->delete()) {
             return true;
         } else {
@@ -90,7 +92,8 @@ class LeadRepository implements LeadRepositoryInterface{
     }
 
     public function getLeadDetails($id){
-        $leadDetails = LeadModel::findOrFail($id);
+
+        $leadDetails = Lead::where('id', (int)$id)->get();
         if($leadDetails){
             return $leadDetails;
         }
@@ -103,17 +106,79 @@ class LeadRepository implements LeadRepositoryInterface{
 
     }
 
-    public function list($per_page=10,$page=1){
-        $offset = ($page - 1) * $per_page;
-        $leads = $this->model->where('id', '>', 0)
-        ->skip($offset)
-        ->take($per_page) 
-        ->get();
-        $totalCount = $this->model->count();
-        return $leads;
+    public function list($page,$per_page,$search,$orderColumnIndex,$orderDirection,$draw){
+        $columns = [
+            'id', 
+            'lead_name', 
+            'email', 
+            'phone', 
+            'lead_status', 
+            'lead_stage', 
+            'current_state', 
+            'city', 
+            'preferred_course_of_study', 
+            'sat_score', 
+            'ielts_score', 
+            'has_passport', 
+            'work_experience', 
+            'preferred_intake', 
+            'preferred_universities', 
+            'lead_owner', 
+            'created_at', 
+            'updated_at'
+        ];
+
+        $count = Lead::count();
+        $query = Lead::query();
+        
+        if ($search) {
+            $query->where(function($query) use ($search) {
+                $query->where('lead_name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if (isset($columns[$orderColumnIndex])) {
+            $query->orderBy($columns[$orderColumnIndex], $orderDirection);
+        }
+        
+        $filteredCount = $query->count();
+        
+        $leads = $query->skip($page * $per_page)->take($per_page)->get();
+
+        $data = $leads->map(function ($lead) {
+            return [
+                'id' => $lead->id,
+                'lead_name' => $lead->lead_name,
+                'email' => $lead->email,
+                'phone' => $lead->phone,
+                'lead_status' => $lead->lead_status,
+                'lead_stage' => $lead->lead_stage,
+                'current_state' => $lead->current_state,
+                'city' => $lead->city,
+                'preferred_course_of_study' => $lead->preferred_course_of_study,
+                'sat_score' => $lead->sat_score,
+                'ielts_score' => $lead->ielts_score,
+                'has_passport' => $lead->has_passport ? 'Yes' : 'No',
+                'work_experience' => $lead->work_experience,
+                'preferred_intake' => $lead->preferred_intake,
+                'preferred_universities' => $lead->preferred_universities,
+                'lead_owner' => $lead->lead_owner,
+                'created_at' => $lead->created_at->format('Y-m-d'),
+                'updated_at' => $lead->updated_at->format('Y-m-d'),
+                'action' => '<div class="row"><button class="btn btn-info" onClick="openModal('.$lead->id.')" data-bs-toggle="modal" data-bs-target="#editDetailsModal">Edit</button><button class="btn btn-danger" onClick="deleteLead('.$lead->id.')" class="dropdown-item delete-lead">Delete</button></div>'
+            ];
+        });
+
+        return response()->json([
+            'draw' => (int)$draw,
+            'recordsTotal' => $count,
+            'recordsFiltered' => $filteredCount,
+            'data' => $data
+        ]);
     }
 
-    public function createFilterQuery($filters){
+    public function getDataElastic($filters){
         $filter_arr  = json_decode($filters,true);
         $query = ['bool' => ['must' => []]];
         
@@ -140,7 +205,20 @@ class LeadRepository implements LeadRepositoryInterface{
              
         // print_r($query);die;
         $result = $this->elastic->search($query);
-        return $result;
+        return json_decode(json_encode($result));
+    }
+
+    public function getCallDetails($lead_id){
+
+        $call_details = CallLog::where('lead_id', (int)$lead_id)
+        ->select('call_type', 'call_from', 'call_start_time', 'time_duration','id','call_status')
+        ->get();
+        return $call_details;
+    }
+
+    public function getNotes($lead_id){
+        $notes = Note::where('lead_id',(int)$lead_id)->get();
+        return $notes;
     }
 
 }

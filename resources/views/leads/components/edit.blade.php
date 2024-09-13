@@ -21,7 +21,7 @@
         <form class="edit-record" id="edit-record" action="{{ route('leads.update') }}" method="POST">
           @csrf
           <!-- Lead id -->
-          <input type="hidden" id="lead_id_edit" name="lead_id">
+          <input type="hidden" id="lead_id_edit" name="id">
           <!-- Lead Name -->
           <div class="input-group input-group-merge mb-6">
             <span id="basicFullname2" class="input-group-text"><i class="ri-user-line ri-18px"></i></span>
@@ -277,30 +277,30 @@
 <script src="../../assets/vendor/libs/jquery.js"></script>
 
 <script>
-    function openModal(lead_id){
-  $.ajax({
-    url: `/get-lead-details/${lead_id}`,
-    type: 'GET',
-    success: function(response) {
-      $('#lead_id_edit').val(response.data._id);
-      $('#leadName_edit').val(response.data.lead_name);
-      $('#email_edit').val(response.data.email);
-      $('#leadStage_edit').val(response.data.lead_stage);
-      $('#city_edit').val(response.data.city);
-      $('#currentState_edit').val(response.data.current_state);
-      $('#leadOwner_edit').val(response.data.lead_owner);
-      $('#preferredIntake_edit').val(response.data.preferred_intake);
-      $('#ieltsScore_edit').val(response.data.ielts_score);
-      $('#satScore_edit').val(response.data.sat_score);
-      $('#leadStatus_edit').val(response.data.lead_status);
-      $('#workExperience_edit').val(response.data.work_experience);
-      $('#preferredCourseOfStudy_edit').val(response.data.preferred_course_of_study);
-      $('#preferredUniversities_edit').val(response.data.preferred_universities);
-      $('#phone_edit').val(response.data.phone);
-    },
-    error: function(err) {
-      console.error('Failed to fetch lead details:', err);
-    }
-  });
-}
+  function openModal(lead_id){
+    $.ajax({
+      url: `/get-lead-details/${lead_id}`,
+      type: 'GET',
+      success: function(response) {  
+        $('#lead_id_edit').val(response.data[0].id);
+        $('#leadName_edit').val(response.data[0].lead_name);
+        $('#email_edit').val(response.data[0].email);
+        $('#leadStage_edit').val(response.data[0].lead_stage);
+        $('#city_edit').val(response.data[0].city);
+        $('#currentState_edit').val(response.data[0].current_state);
+        $('#leadOwner_edit').val(response.data[0].lead_owner);
+        $('#preferredIntake_edit').val(response.data[0].preferred_intake);
+        $('#ieltsScore_edit').val(response.data[0].ielts_score);
+        $('#satScore_edit').val(response.data[0].sat_score);
+        $('#leadStatus_edit').val(response.data[0].lead_status);
+        $('#workExperience_edit').val(response.data[0].work_experience);
+        $('#preferredCourseOfStudy_edit').val(response.data[0].preferred_course_of_study);
+        $('#preferredUniversities_edit').val(response.data[0].preferred_universities);
+        $('#phone_edit').val(response.data.phone);
+      },
+      error: function(err) {
+        console.error('Failed to fetch lead details:', err);
+      }
+    });
+  }
 </script>

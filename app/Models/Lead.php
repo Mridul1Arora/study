@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
-class LeadModel extends Eloquent
+class Lead extends Eloquent
 {
     // Define the MongoDB connection and collection name if different from default
     protected $connection = 'mongodb';

@@ -52,7 +52,7 @@ class ElasticQueryHandler
         $params = [
             'index' => ElasticConstants::$lead_list['index'],
             'body' => [
-                'size'=>21,
+                'size'=>100,
                 'query' => $query
             ],
         ];

@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contract\LeadRepositoryInterface;
 use Illuminate\Support\Collection;
-use App\Models\LeadModel;
-use App\Models\FieldsModel;
+use App\Models\Lead;
+use App\Models\Field;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\LeadsImport;
 use App\Services\ElasticServices\ElasticQueryHandler;
+use App\Constants\CallLogConstants;
+
 
 class LeadController extends Controller
 {
@@ -19,40 +21,51 @@ class LeadController extends Controller
 
     public function import()
     {
-        $query = new ElasticQueryHandler();
+        // $query = new ElasticQueryHandler();
         // $query->createIndex();
         // $query->syncLeads();
-        $query->search('Emily Johnson');
     }
 
     public function index (Request $request) {
         $page = $request->input('page') ?? 1;
-        $per_page = $request->input('per_page') ?? 10;
-        $count = LeadModel::count();
-        $fields = FieldsModel::all();
+        $per_page = $request->input('per_page') ?? 10; 
+        $count = Lead::count();
+        $leads = $request->input('leads') ?? '';
+        $filters = $request->input('filters') ?? '';
+        if(!empty($leads)){
+            $leads = json_decode($leads);
+        }
+        $fields = Field::where('module_id', 1)->get();
         $page_count = intval(round($count/$per_page));
-        $leads = $this->repo->list($per_page,$page);
-        return view('pages.lead',['leads'=>$leads,'fields'=>$fields,'per_page'=>$per_page,'page'=>$page,'count'=>$count,'page_count'=>$page_count]);
+        if(!empty($filters)){
+            return view('pages.lead',['filters'=>$filters,'fields'=>$fields,'per_page'=>$per_page,'page'=>$page,'count'=>$count,'page_count'=>$page_count]);
+        }
+        return view('pages.lead',['fields'=>$fields,'per_page'=>$per_page,'page'=>$page,'count'=>$count,'page_count'=>$page_count]);
     }
+    
+    public function getLeads(Request $request)
+    {
+        if ($request->ajax()) {
+            $page = $request->input('start', 0) / $request->input('length', 10);
+            $per_page = $request->input('length', 10);
+            $search = $request->input('search.value');
+            $orderColumnIndex = $request->input('order.0.column');
+            $orderDirection = $request->input('order.0.dir');
+            $draw = $request->input('draw');
+            $filters = $request->input('filters');
 
-    public function getLeads (Request $request) {
-        $page = $request->input('page') ?? 1;
-        $per_page = $request->input('per_page') ?? 10;
-        $filters = $request->input('filter_data');
-        if(!empty($filters)){
-            $offset = ($page - 1) * $per_page;
-            $filter_query = $this->repo->createFilterQuery($filters);
-            $count_filtered = count($filter_query);
-            $paginated_items = array_slice($filter_query, $offset, $per_page);
-        }
-        $count = LeadModel::count();
-        $page_count = round($count/$per_page);
-        $leads = $this->repo->list($per_page,$page);
-        if(!empty($filters)){
-            return ['leads'=>$paginated_items,'per_page'=>$per_page,'page'=>$page,'count'=>$count,'page_count'=>round($count_filtered/$per_page)];
-        }
-        else{
-           return ['leads'=>$leads,'per_page'=>$per_page,'page'=>$page,'count'=>$count,'page_count'=>$page_count];
+            $filter_arr = json_decode($filters);
+            if(!empty($filter_arr)){
+                $output = $this->repo->getDataElastic($filters);
+                return response()->json([
+                    'draw' => (int)$draw,
+                    'data' => $output
+                ]);
+            }
+            else{
+                $output = $this->repo->list($page,$per_page,$search,$orderColumnIndex,$orderDirection,$draw);
+                return $output;
+            }
         }
     }
 
@@ -63,11 +76,9 @@ class LeadController extends Controller
 
     public function update(Request $request){
         $fields = $request->all();
-        $lead_id = $request->input('lead_id');
-        $excludedFields = ['_token', 'lead_id'];
-
-        $lead = LeadModel::find($request->lead_id);
-
+        $lead_id = intval($request->input('id'));
+        $excludedFields = ['_token', 'id'];
+        $lead = Lead::where('id', $lead_id)->first();
         if($lead){
             foreach ($fields as $key => $value) {
                 if(!in_array($key,$excludedFields)){
@@ -80,7 +91,6 @@ class LeadController extends Controller
         else{
             return response()->json(['success'=>false,'message'=>'Lead Not Found'],404);
         }
-        
         $updatedFields = $lead->getDirty();
         
         $update = $this->repo->update($updatedFields,$lead_id);
@@ -92,7 +102,17 @@ class LeadController extends Controller
         }
     }
 
-    public function getLead($id){
+    public function getDetailsPage($id){
+
+        $call_purposes = CallLogConstants::CALL_PURPOSES;
+        $call_results = CallLogConstants::CALL_RESULTS;
+        $call_types = CallLogConstants::CALL_TYPES;
+        $call_details = $this->repo->getCallDetails($id);
+        $notes = $this->repo->getNotes($id);
+        return view('pages/lead-id',['call_purposes'=>$call_purposes,'call_results'=>$call_results,'call_types'=>$call_types,'id'=>$id,'call_details'=>$call_details,'notes'=>$notes]);
+    }
+
+    public function getLeadDetails($id){
         $leadDetails = $this->repo->getLeadDetails($id);
         if(!empty($leadDetails)){
             return response()->json(['success' => true, 'message' => 'Lead details found.','data'=>$leadDetails]);

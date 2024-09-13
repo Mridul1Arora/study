@@ -2,36 +2,60 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\CallLogController;
+use App\Http\Controllers\NotesController;
 
 
 
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
-        return view('pages/dashboard');
+        // return view('pages/dashboard');
+        return view('test');
     })->middleware('verified')->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+
+    //Leads Module
     Route::get('lead', [LeadController::class,'index'])->name('lead');
+    Route::post('lead', [LeadController::class,'index'])->name('lead-post');
 
-    Route::get('lead/id', function () {
-        return view('pages/lead-id');
-    })->name('lead-id');
 
-    Route::get('get-lead-details/{id}',[LeadController::class,'getLead']);
+    // Route::get('lead/{id}', function () {
+    //     return view('pages/lead-id');
+    // })->name('lead-id');
+
+    Route::get('lead/{id}',[LeadController::class,'getDetailsPage']);
+
+
+    Route::get('get-lead-details/{id}',[LeadController::class,'getLeadDetails']);
     
     Route::get('/import', [LeadController::class, 'import'])->name('leads.import');
 
-    Route::get('/leads/data',[LeadController::class,'getLeads']);
+    Route::get('/leads/data',[LeadController::class,'getLeads'])->name('getLeads');
 
     Route::post('lead/update',[LeadController::class,'update'])->name('leads.update');
 
     Route::delete('/leads/{id}', [LeadController::class, 'destroy'])->name('leads.destroy');
 
     Route::post('lead',[LeadController::class,'create'])->name('leads.create');
+
+    //Calls Module
+    Route::get('calls', [CallLogController::class,'index'])->name('calls');
+    Route::get('calls/list', [CallLogController::class,'list'])->name('calls.list');
+    Route::get('calls/details/{id}', [CallLogController::class,'getDetails'])->name('calls.details');
+    Route::post('/calls/create', [CallLogController::class,'create']);
+    Route::post('/calls/update', [CallLogController::class,'update'])->name('calls.update');
+
+
+    //Notes Module
+    Route::get('/note/details/{id}',[NotesController::class,'getDetails']);
+    Route::post('/notes/create',[NotesController::class,'create'])->name('create.note');
+    Route::post('/notes/update',[NotesController::class,'update'])->name('update.note');
+    Route::delete('/notes/delete',[NotesController::class,'delete'])->name('delete.note');
 
     Route::get('contact', function () {
         return view('pages/contact');

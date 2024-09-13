@@ -9,7 +9,7 @@ Interface LeadRepositoryInterface
     public function massUpdate();
     public function delete($id);
     public function changeStatus();
-    public function list($per_page,$page);
+    public function list($page,$per_page,$search,$orderColumnIndex,$orderDirection,$draw);
 }
 
 ?>
