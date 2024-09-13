@@ -42,8 +42,6 @@
     <script src="../../assets/vendor/js/helpers.js"></script>
     <script src="../../assets/js/config.js"></script>
 
-    <!-- Vite -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <title>CRM</title>
   </head>

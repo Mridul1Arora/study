@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div class="card-datatable table-responsive pt-0">
-                <table class="datatables-basic table table-bordered dataTable no-footer">
+                <table class="datatables-module table table-bordered dataTable no-footer">
                     <thead>
                         <tr>
                             <th>Rule Name</th>

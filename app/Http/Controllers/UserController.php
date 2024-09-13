@@ -21,8 +21,7 @@ class UserController extends Controller
 
     public function index() 
     {
-        $data = $this->repository->getAllUsers();
-        return view('users.index', compact('data'));
+        return view('users.index');
      
     }
 

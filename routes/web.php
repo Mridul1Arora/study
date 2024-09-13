@@ -5,10 +5,15 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AttachmentController;
+use App\Http\Controllers\UniversityController;
 
   
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('pages/dashboard');
+    })->middleware('verified')->name('dashboard');
  
 
     Route::get('/attachment', [AttachmentController::class, 'index'])->name('attachment.index');
@@ -17,23 +22,22 @@ Route::middleware('auth')->group(function () {
     Route::post('/attachment/action', [AttachmentController::class, 'handleAction'])->name('attachment.action');
 
 
-
-
-    Route::get('/dashboard', function () {
-        return view('pages/dashboard');
-    })->middleware('verified')->name('dashboard');
-
     Route::get('/users' ,[UserController::class, 'index'])->name('users.index');
-
     Route::get('/users-data', [UserController::class, 'getUsers'])->name('users.data');
-
-    //Route::resource('users', UserController::class);
-
     Route::get('/users/add-user' ,[UserController::class, 'addNewUser'])->name('users.add-user');
     Route::post('/users/add-user' ,[UserController::class, 'createNewUser'])->name('users.user-added');
 
 
+    Route::get('/university' ,[UniversityController::class, 'index'])->name('university.index');
+    Route::get('/university-data', [UniversityController::class, 'getUniversity'])->name('university.data');
+    Route::get('/university/{id}', [UniversityController::class, 'getUniversityDetails'])->name('university.university-details');
+    Route::post('/university/add-new-uni', [UniversityController::class, 'addNewUniversityDetails'])->name('university.add-university-details');
+    Route::post('/university/action', [UniversityController::class, 'handleAction'])->name('university.action');
 
+
+    Route::get('/countries', [UniversityController::class, 'getCountries']);
+    Route::get('/states/{countryId}', [UniversityController::class, 'getStates']);
+    Route::get('/cities/{stateId}', [UniversityController::class, 'getCities']);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -43,28 +47,15 @@ Route::middleware('auth')->group(function () {
     Route::get('roles/hierarchy/show', [RoleController::class, 'showRoleHierarchy'])->name('roles.hierarchy');
     Route::get('roles/show/{id}', [RoleController::class, 'showRoleDetails'])->name('roles.details');
     Route::get('roles/data-sharing',[RoleController::class, 'showRuleDetails'])->name('roles.data-sharing');
-
     Route::get('roles/add-new-permission/{id}',[RoleController::class, 'addNewPermissions'])->name('roles.add-new-permission');
     Route::post('/roles/update-role-permission', [RoleController::class, 'updateRolePermission'])->name('roles.updateRolePermission');
-
-
-
     Route::get('roles/role-permission', [RoleController::class, 'rolePermissionData'])->name('roles.role-permission');
     Route::post('/roles/add-role-permission', [RoleController::class, 'addRolePermission'])->name('roles.addRolePermission');
-
-
-
     Route::post('/role/update-permission', [RoleController::class, 'updateCorePermission'])->name('role.updateCorePermission');
-
     Route::post('/role/update-rule', [RoleController::class, 'updateDataSharingRule'])->name('role.updateDataSharingRule');
     Route::post('/role/delete-rule', [RoleController::class, 'deleteDataSharingRule'])->name('role.deleteDataSharingRule');
-
     Route::post('/roles/add-role', [RoleController::class, 'addNewRole'])->name('roles.addNewRole');
-
-
     Route::get('/role/get-permissions-by-module', [RoleController::class, 'getPermissionsByModule'])->name('role.getPermissionsByModule');
-
-
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
     Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
