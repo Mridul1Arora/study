@@ -2,97 +2,133 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Lead;
 use Illuminate\Http\Request;
+use App\Contract\LeadRepositoryInterface;
+use Illuminate\Support\Collection;
+use App\Models\Lead;
+use App\Models\Field;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\LeadsImport;
+use App\Services\ElasticServices\ElasticQueryHandler;
+use App\Constants\CallLogConstants;
+
 
 class LeadController extends Controller
 {
-    /**
-     * Display a listing of the leads.
-     */
-    public function index()
+    public function __construct(LeadRepositoryInterface $leadrepo){
+        $this->repo = $leadrepo;
+    }
+
+    public function import()
     {
-        if (!auth()->user()->can('view lead')) {
-            abort(403, 'Unauthorized');
+        // $query = new ElasticQueryHandler();
+        // $query->createIndex();
+        // $query->syncLeads();
+    }
+
+    public function index (Request $request) {
+        $page = $request->input('page') ?? 1;
+        $per_page = $request->input('per_page') ?? 10; 
+        $count = Lead::count();
+        $leads = $request->input('leads') ?? '';
+        $filters = $request->input('filters') ?? '';
+        if(!empty($leads)){
+            $leads = json_decode($leads);
         }
-        $leads = Lead::all();
-        return view('leads.index', compact('leads'));
-    }
-
-    /**
-     * Show the form for creating a new lead.
-     */
-    public function create()
-    {
-        if (!auth()->user()->can('create lead')) {
-            abort(403, 'Unauthorized');
+        $fields = Field::where('module_id', 1)->get();
+        $page_count = intval(round($count/$per_page));
+        if(!empty($filters)){
+            return view('pages.lead',['filters'=>$filters,'fields'=>$fields,'per_page'=>$per_page,'page'=>$page,'count'=>$count,'page_count'=>$page_count]);
         }
-        return view('leads.create');
+        return view('pages.lead',['fields'=>$fields,'per_page'=>$per_page,'page'=>$page,'count'=>$count,'page_count'=>$page_count]);
     }
-
-    /**
-     * Store a newly created lead in storage.
-     */
-    public function store(Request $request)
+    
+    public function getLeads(Request $request)
     {
-        // $validatedData = $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'email' => 'required|email|unique:leads,email',
-        // ]);
+        if ($request->ajax()) {
+            $page = $request->input('start', 0) / $request->input('length', 10);
+            $per_page = $request->input('length', 10);
+            $search = $request->input('search.value');
+            $orderColumnIndex = $request->input('order.0.column');
+            $orderDirection = $request->input('order.0.dir');
+            $draw = $request->input('draw');
+            $filters = $request->input('filters');
 
-        Lead::create($request->all());
-
-        return redirect()->route('leads.index')->with('success', 'Lead created successfully.');
-    }
-
-    /**
-     * Display the specified lead.
-     */
-    public function show(Lead $lead_id)
-    {
-        $lead = $lead_id;
-        return view('leads.show', compact('lead'));
-    }
-
-    /**
-     * Show the form for editing the specified lead.
-     */
-    public function edit(Lead $lead_id)
-    {   
-        if (!auth()->user()->can('edit lead')) {
-            abort(403, 'Unauthorized');
+            $filter_arr = json_decode($filters);
+            if(!empty($filter_arr)){
+                $output = $this->repo->getDataElastic($filters);
+                return response()->json([
+                    'draw' => (int)$draw,
+                    'data' => $output
+                ]);
+            }
+            else{
+                $output = $this->repo->list($page,$per_page,$search,$orderColumnIndex,$orderDirection,$draw);
+                return $output;
+            }
         }
-        $lead = $lead_id;
-        return view('leads.edit', compact('lead'));
     }
 
-    /**
-     * Update the specified lead in storage.
-     */
-    public function update(Request $request, Lead $lead)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:leads,email,' . $lead->lead_id,
-            'phone' => 'nullable|string|max:15',
-            // Add other fields as required
-        ]);
-
-        $lead->update($validatedData);
-
-        return redirect()->route('leads.index')->with('success', 'Lead updated successfully.');
+    public function create(Request $request){
+        $data = $request->all();
+        $lead_id = $this->repo->create($data);
     }
 
-    /**
-     * Remove the specified lead from storage.
-     */
-    public function destroy(Lead $lead_id)
-    {   
-        if (!auth()->user()->can('delete lead')) {
-            abort(403, 'Unauthorized');
+    public function update(Request $request){
+        $fields = $request->all();
+        $lead_id = intval($request->input('id'));
+        $excludedFields = ['_token', 'id'];
+        $lead = Lead::where('id', $lead_id)->first();
+        if($lead){
+            foreach ($fields as $key => $value) {
+                if(!in_array($key,$excludedFields)){
+                    if ($lead->$key !== $value) {
+                        $lead->$key = $value;
+                    }
+                }
+            }
         }
-        //$lead_id->delete();
-        dd("deleted");
-        return redirect()->route('leads.index')->with('success', 'Lead deleted successfully.');
+        else{
+            return response()->json(['success'=>false,'message'=>'Lead Not Found'],404);
+        }
+        $updatedFields = $lead->getDirty();
+        
+        $update = $this->repo->update($updatedFields,$lead_id);
+        if($update){
+            return response()->json(['success' => true, 'message' => 'Lead updated successfully']);
+        }
+        else{
+            return response()->json(['success'=>false,'message'=>'Error updating the lead']);
+        }
+    }
+
+    public function getDetailsPage($id){
+
+        $call_purposes = CallLogConstants::CALL_PURPOSES;
+        $call_results = CallLogConstants::CALL_RESULTS;
+        $call_types = CallLogConstants::CALL_TYPES;
+        $call_details = $this->repo->getCallDetails($id);
+        $notes = $this->repo->getNotes($id);
+        return view('pages/lead-id',['call_purposes'=>$call_purposes,'call_results'=>$call_results,'call_types'=>$call_types,'id'=>$id,'call_details'=>$call_details,'notes'=>$notes]);
+    }
+
+    public function getLeadDetails($id){
+        $leadDetails = $this->repo->getLeadDetails($id);
+        if(!empty($leadDetails)){
+            return response()->json(['success' => true, 'message' => 'Lead details found.','data'=>$leadDetails]);
+        }
+        else{
+            return response()->json(['success'=>false,'message'=>'Lead Not Found'],404);
+        }
+    }
+
+    public function destroy($id){
+        $delete = $this->repo->delete($id);
+        if($delete){
+            return response()->json(['success' => true, 'message' => 'Lead deleted successfully.']);
+        }
+        else{
+            return response()->json(['success' => false, 'message' => 'Lead not found.'], 404);
+        }
     }
 }
