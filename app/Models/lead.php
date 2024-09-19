@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
+use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
-
-class lead extends Model
+class Lead extends Eloquent
 {
-    use HasFactory;
-    use HasRoles;
+    // Define the MongoDB connection and collection name if different from default
+    protected $connection = 'mongodb';
+    protected $collection = 'leads'; // Optional, defaults to the model name in plural form
 
+    // Specify the attributes that are mass assignable
+    protected $fillable = ['name', 'email', 'phone'];
 
-    protected $primaryKey = 'lead_id';
-
-    protected $guarded = [];
+    // Optionally define hidden or cast attributes
+    // protected $hidden = ['password'];
+    // protected $casts = [
+    //     'is_active' => 'boolean',
+    // ];
 }

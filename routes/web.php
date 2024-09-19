@@ -152,13 +152,7 @@ Route::middleware('auth')->group(function () {
 //check module permission
 Route::middleware(['auth','check_module_permission'])->group(function () {
 
-    Route::get('/lead', [LeadController::class, 'index'])->name('leads.index');
-    Route::get('/lead/create', [LeadController::class, 'create'])->name('leads.create');
-    Route::post('/lead', [LeadController::class, 'store'])->name('leads.store');
-    Route::get('/lead/{lead_id}', [LeadController::class, 'show'])->name('leads.show');
-    Route::get('/lead/{lead_id}/edit', [LeadController::class, 'edit'])->name('leads.edit');
-    Route::put('/lead/{lead_id}', [LeadController::class, 'update'])->name('leads.update');
-    Route::get('/lead/delete/{lead_id}', [LeadController::class, 'destroy'])->name('leads.destroy');
+  
 
     Route::get('lead/id', function () {
         return view('pages/lead-id');
