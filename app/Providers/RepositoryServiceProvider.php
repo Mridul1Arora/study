@@ -11,6 +11,12 @@ use App\Contract\AttachmentRepositoryInterface;
 use App\Repositories\AttachmentRepository;
 use App\Contract\UniversityRepositoryInterface;
 use App\Repositories\UniversityRepository;
+use App\Contract\LeadRepositoryInterface;
+use App\Contract\CallLogRepositoryInterface;
+use App\Repositories\LeadRepository;
+use App\Repositories\CallLogRepository;
+use App\Contract\NotesRepositoryInterface;
+use App\Repositories\NotesRepository;
 
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -26,6 +32,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class); 
         $this->app->bind(AttachmentRepositoryInterface::class, AttachmentRepository::class);
         $this->app->bind(UniversityRepositoryInterface::class, UniversityRepository::class);  
+        $this->app->bind(LeadRepositoryInterface::class, LeadRepository::class);
+        $this->app->bind(CallLogRepositoryInterface::class, CallLogRepository::class);
+        $this->app->bind(NotesRepositoryInterface::class, NotesRepository::class);
     }
 
     /**
