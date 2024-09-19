@@ -2,7 +2,6 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\LeadController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\UniversityController;
@@ -15,8 +14,8 @@ use App\Http\Controllers\NotesController;
 Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
-        // return view('pages/dashboard');
-        return view('test');
+        return view('pages/dashboard');
+        // return view('test');
     })->middleware('verified')->name('dashboard');
  
 
@@ -31,25 +30,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/add-user' ,[UserController::class, 'addNewUser'])->name('users.add-user');
     Route::post('/users/add-user' ,[UserController::class, 'createNewUser'])->name('users.user-added');
 
-
-    // Route::get('lead/{id}', function () {
-    //     return view('pages/lead-id');
-    // })->name('lead-id');
-
+    //Leads Module
+    Route::get('lead', [LeadController::class,'index'])->name('lead');
+    Route::post('lead', [LeadController::class,'index'])->name('lead-post');
     Route::get('lead/{id}',[LeadController::class,'getDetailsPage']);
-
-
     Route::get('get-lead-details/{id}',[LeadController::class,'getLeadDetails']);
-    
     Route::get('/import', [LeadController::class, 'import'])->name('leads.import');
-
     Route::get('/leads/data',[LeadController::class,'getLeads'])->name('getLeads');
-
     Route::post('lead/update',[LeadController::class,'update'])->name('leads.update');
-
     Route::delete('/leads/{id}', [LeadController::class, 'destroy'])->name('leads.destroy');
-
     Route::post('lead',[LeadController::class,'create'])->name('leads.create');
+    Route::get('/new/leads',[LeadController::class,'newLeads']);
 
     //Calls Module
     Route::get('calls', [CallLogController::class,'index'])->name('calls');
@@ -57,7 +48,6 @@ Route::middleware('auth')->group(function () {
     Route::get('calls/details/{id}', [CallLogController::class,'getDetails'])->name('calls.details');
     Route::post('/calls/create', [CallLogController::class,'create']);
     Route::post('/calls/update', [CallLogController::class,'update'])->name('calls.update');
-
 
     //Notes Module
     Route::get('/note/details/{id}',[NotesController::class,'getDetails']);
@@ -158,32 +148,31 @@ Route::middleware('auth')->group(function () {
 
 
 //check module permission
-Route::middleware(['auth','check_module_permission'])->group(function () {
+// Route::middleware(['auth','check_module_permission'])->group(function () {
 
-    Route::get('/lead', [LeadController::class, 'index'])->name('leads.index');
-    Route::get('/lead/create', [LeadController::class, 'create'])->name('leads.create');
-    Route::post('/lead', [LeadController::class, 'store'])->name('leads.store');
-    Route::get('/lead/{lead_id}', [LeadController::class, 'show'])->name('leads.show');
-    Route::get('/lead/{lead_id}/edit', [LeadController::class, 'edit'])->name('leads.edit');
-    Route::put('/lead/{lead_id}', [LeadController::class, 'update'])->name('leads.update');
-    Route::get('/lead/delete/{lead_id}', [LeadController::class, 'destroy'])->name('leads.destroy');
+    // Route::get('/lead', [LeadController::class, 'index'])->name('leads.index');
+    // Route::get('/lead/create', [LeadController::class, 'create'])->name('leads.create');
+    // Route::post('/lead', [LeadController::class, 'store'])->name('leads.store');
+    // Route::get('/lead/{lead_id}', [LeadController::class, 'show'])->name('leads.show');
+    // Route::get('/lead/{lead_id}/edit', [LeadController::class, 'edit'])->name('leads.edit');
+    // Route::put('/lead/{lead_id}', [LeadController::class, 'update'])->name('leads.update');
+    // Route::get('/lead/delete/{lead_id}', [LeadController::class, 'destroy'])->name('leads.destroy');
 
-    Route::get('lead/id', function () {
-        return view('pages/lead-id');
-    })->name('lead-id');
+    // Route::get('lead/id', function () {
+    //     return view('pages/lead-id');
+    // })->name('lead-id');
 
-    Route::get('contact', function () {
-        return view('pages/contact');
-    })->name('contact');
+    // Route::get('contact', function () {
+    //     return view('pages/contact');
+    // })->name('contact');
 
-    Route::get('deal', function () {
-        return view('pages/deal');
-    })->name('deal');
+    // Route::get('deal', function () {
+    //     return view('pages/deal');
+    // })->name('deal');
 
 
 
-});
-});
+// });
 
 // Publicly accessible routes (Login, Register, Welcome page)
 Route::get('login', function () {

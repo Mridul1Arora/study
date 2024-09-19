@@ -13,19 +13,19 @@ class CallLogRepository implements CallLogRepositoryInterface{
 
     public function create($data){
         try {
-            $call = $this->model;
-            $call->lead_id = $data['lead_id'];
-            $call->call_to = $data['call_to'];
-            $call->call_from = $data['call_from'];
-            $call->call_type = $data['call_type'];
-            $call->time_duration = $data['time_duration'];
-            $call->call_start_time = $data['call_start_time'];
-            $call->call_purpose = $data['call_purpose'];
-            $call->call_agenda = $data['call_agenda'];
-            $call->call_result = $data['call_result'];
-            $call->description = $data['call_desc'];
-            $call->call_status = $data['call_status'];
-            $call->save();
+            CallLog::create([
+                'lead_id' => (int)$data['lead_id'],
+                'call_to' => $data['call_to'],
+                'call_from' => $data['call_from'],
+                'call_type' => $data['call_type'],
+                'time_duration' => $data['time_duration'],
+                'call_start_time' => $data['call_start_time'],
+                'call_purpose' => $data['call_purpose'],
+                'call_agenda' => $data['call_agenda'],
+                'call_result' => $data['call_result'],
+                'description' => $data['call_desc'],
+                'call_status' => $data['call_status'],
+            ]);
         } catch (\Exception $e) {
             dd($e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
@@ -33,7 +33,8 @@ class CallLogRepository implements CallLogRepositoryInterface{
     }
 
     public function update($updated_fields,$id){
-        $update = $this->model->where('id',$id)->update($updated_fields);
+        $call = CallLog::find($id);
+        $update = $call->update($updated_fields);
         if($update){
             return true;
         }

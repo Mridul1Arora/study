@@ -11,6 +11,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\LeadsImport;
 use App\Services\ElasticServices\ElasticQueryHandler;
 use App\Constants\CallLogConstants;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ActivityLog;
 
 
 class LeadController extends Controller
@@ -24,6 +26,15 @@ class LeadController extends Controller
         // $query = new ElasticQueryHandler();
         // $query->createIndex();
         // $query->syncLeads();
+    }
+
+    public function newLeads(Request $request)
+    {
+        $leads = Lead::paginate(60);
+        $leads->getCollection()->transform(function ($lead) {
+            return $lead->getAttributesArray();
+        });
+        dd($leads->items());
     }
 
     public function index (Request $request) {
@@ -108,8 +119,10 @@ class LeadController extends Controller
         $call_results = CallLogConstants::CALL_RESULTS;
         $call_types = CallLogConstants::CALL_TYPES;
         $call_details = $this->repo->getCallDetails($id);
+        $activity_logs = $this->repo->getActivity($id);
         $notes = $this->repo->getNotes($id);
-        return view('pages/lead-id',['call_purposes'=>$call_purposes,'call_results'=>$call_results,'call_types'=>$call_types,'id'=>$id,'call_details'=>$call_details,'notes'=>$notes]);
+
+        return view('pages/lead-id',['call_purposes'=>$call_purposes,'activities'=>$activity_logs,'call_results'=>$call_results,'call_types'=>$call_types,'id'=>$id,'call_details'=>$call_details,'notes'=>$notes]);
     }
 
     public function getLeadDetails($id){

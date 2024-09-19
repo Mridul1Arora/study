@@ -190,14 +190,9 @@
                   <div class="nav-align-top">
                     <ul class="nav nav-pills flex-column flex-sm-row mb-6 row-gap-2">
                       <li class="nav-item">
-                        <a class="nav-link active" href="javascript:void(0);"
-                          ><i class="ri-user-3-line me-2"></i>Overview</a
-                        >
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link active" href="javascript:void(0);"
-                          ><i class="ri-user-3-line me-2"></i>Timeline</a
-                        >
+                        <a class="nav-link active" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#viewtimeline">
+                          <i class="ri-user-3-line me-2"></i>Timeline
+                        </a>
                       </li>
                       <li>
                       <button
@@ -214,127 +209,48 @@
 
               <!--/ Navbar pills -->
 
-                  <!-- Activity Timeline -->
-                  <div class="card card-action mb-6">
-                    <div class="card-header align-items-center">
-                      <h5 class="card-action-title mb-0">
-                        <i class="ri-bar-chart-2-line ri-24px text-body me-4"></i>Activity Timeline
-                      </h5>
-                      <div class="card-action-element">
-                        <div class="dropdown">
-                          <button
-                            type="button"
-                            class="btn dropdown-toggle hide-arrow p-0"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="ri-more-2-line ri-22px text-muted"></i>
-                          </button>
-                          <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="javascript:void(0);">Share timeline</a></li>
-                            <li><a class="dropdown-item" href="javascript:void(0);">Suggest edits</a></li>
-                            <li>
-                              <hr class="dropdown-divider" />
-                            </li>
-                            <li><a class="dropdown-item" href="javascript:void(0);">Report bug</a></li>
-                          </ul>
+<!-- TimeLine -->
+<div class="modal fade" id="viewtimeline" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Activity Log</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-5">
+                <ul class="timeline mb-0">
+                  @foreach($activities as $activity)
+                    <li class="timeline-item timeline-item-transparent">
+                        <span class="timeline-point timeline-point-primary"></span>
+                        <div class="timeline-event">
+                            <div class="timeline-header mb-3">
+                                <h6 class="mb-0">{{ $activity->description }}</h6>
+                                <small class="text-muted">{{ $activity->created_at }}</small>
+                            </div>
+                            <p class="mb-2"><strong>by-</strong> {{ $activity->causer_name }}</p>
+                            @if(!empty($activity->updated_fields))
+                              <div class="d-flex">
+                                <div class="badge bg-lighter rounded-3" style="word-break: break-all;">
+                                  <span class="h6 mb-0 text-body text-start">
+                                    @foreach ($activity->updated_fields as $key => $value)
+                                      <strong>{{ $key }}:</strong> {{ $value }} 
+                                    @endforeach
+                                  </span>
+                                </div>
+                              </div>
+                            @endif
                         </div>
-                      </div>
-                    </div>
-                    <div class="card-body pt-5">
-                      <ul class="timeline mb-0">
-                        <li class="timeline-item timeline-item-transparent">
-                          <span class="timeline-point timeline-point-primary"></span>
-                          <div class="timeline-event">
-                            <div class="timeline-header mb-3">
-                              <h6 class="mb-0">12 Invoices have been paid</h6>
-                              <small class="text-muted">12 min ago</small>
-                            </div>
-                            <p class="mb-2">Invoices have been paid to the company</p>
-                            <div class="d-flex align-items-center">
-                              <div class="badge bg-lighter rounded-3">
-                                <img src="../../assets//img/icons/misc/pdf.png" alt="img" width="15" class="me-2" />
-                                <span class="h6 mb-0 text-body">invoices.pdf</span>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="timeline-item timeline-item-transparent">
-                          <span class="timeline-point timeline-point-success"></span>
-                          <div class="timeline-event">
-                            <div class="timeline-header mb-3">
-                              <h6 class="mb-0">Client Meeting</h6>
-                              <small class="text-muted">45 min ago</small>
-                            </div>
-                            <p class="mb-2">Project meeting with john @10:15am</p>
-                            <div class="d-flex justify-content-between flex-wrap gap-2">
-                              <div class="d-flex flex-wrap align-items-center">
-                                <div class="avatar avatar-sm me-2">
-                                  <img src="../../assets/img/avatars/1.png" alt="Avatar" class="rounded-circle" />
-                                </div>
-                                <div>
-                                  <p class="mb-0 small fw-medium">Lester McCarthy (Client)</p>
-                                  <small>CEO of Pixinvent</small>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="timeline-item timeline-item-transparent">
-                          <span class="timeline-point timeline-point-info"></span>
-                          <div class="timeline-event">
-                            <div class="timeline-header mb-3">
-                              <h6 class="mb-0">Create a new project for client</h6>
-                              <small class="text-muted">2 Day Ago</small>
-                            </div>
-                            <p class="mb-2">6 team members in a project</p>
-                            <ul class="list-group list-group-flush">
-                              <li
-                                class="list-group-item d-flex justify-content-between align-items-center flex-wrap p-0">
-                                <div class="d-flex flex-wrap align-items-center">
-                                  <ul class="list-unstyled users-list d-flex align-items-center avatar-group m-0 me-2">
-                                    <li
-                                      data-bs-toggle="tooltip"
-                                      data-popup="tooltip-custom"
-                                      data-bs-placement="top"
-                                      title="Vinnie Mostowy"
-                                      class="avatar pull-up">
-                                      <img class="rounded-circle" src="../../assets/img/avatars/5.png" alt="Avatar" />
-                                    </li>
-                                    <li
-                                      data-bs-toggle="tooltip"
-                                      data-popup="tooltip-custom"
-                                      data-bs-placement="top"
-                                      title="Allen Rieske"
-                                      class="avatar pull-up">
-                                      <img class="rounded-circle" src="../../assets/img/avatars/12.png" alt="Avatar" />
-                                    </li>
-                                    <li
-                                      data-bs-toggle="tooltip"
-                                      data-popup="tooltip-custom"
-                                      data-bs-placement="top"
-                                      title="Julee Rossignol"
-                                      class="avatar pull-up">
-                                      <img class="rounded-circle" src="../../assets/img/avatars/6.png" alt="Avatar" />
-                                    </li>
-                                    <li class="avatar">
-                                      <span
-                                        class="avatar-initial rounded-circle pull-up text-heading"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom"
-                                        title="3 more"
-                                        >+3</span
-                                      >
-                                    </li>
-                                  </ul>
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <!--/ Activity Timeline -->
+                    </li>
+                  @endforeach
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TimeLine -->
 
               <div class="mt-3 mb-3">
               @include('layout.components.notes')

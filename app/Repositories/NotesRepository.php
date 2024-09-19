@@ -11,9 +11,9 @@ class NotesRepository implements NotesRepositoryInterface{
     }
 
     public function create($data){
-        $note_id = $this->model->firstOrCreate($data);
-        if($note_id){
-            return true;
+        $note = Note::create($data);
+        if($note){
+            return $note;
         }
         else{
             return false;
@@ -21,12 +21,12 @@ class NotesRepository implements NotesRepositoryInterface{
     }
 
     public function update($note_id,$edited_note){
-        $note = $this->model->find($note_id);
+        $note = Note::find($note_id);
         if($note){
             $fields = [];
             $fields['updated_at'] = now();
             $fields['note_text'] = $edited_note;
-            $update = $this->model->where('id',(int)$note_id)->update($fields);
+            $update = $note->update($fields);
         }
         else{
             return response()->json('note not found');

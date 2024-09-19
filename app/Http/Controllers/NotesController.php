@@ -5,25 +5,44 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contract\NotesRepositoryInterface;
 use App\Models\Note;
+use App\Contract\AttachmentRepositoryInterface;
+
 
 class NotesController extends Controller
 {
-    public function __construct(NotesRepositoryInterface $notes){
+    public function __construct(NotesRepositoryInterface $notes,AttachmentRepositoryInterface $attachment){
         $this->notes = $notes;
+        $this->attachment = $attachment;
     }
 
 
     public function create(Request $request){
         $data = [];
-        $data['lead_id'] = $request->input('lead_id');
+        $data['lead_id'] = (int)$request->input('lead_id');
         $data['note_text'] = $request->input('note');
         $data['added_by'] = auth()->user()->name;
+
+
+        if($request->hasFile('files')){
+            $request->validate([
+                'files.*' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5000',
+            ]);
+            $file = $request->file('files');
+            $upload = $this->attachment->uploadAttachment($file,$data['lead_id'],'notes');
+            if($upload == []){
+                throw new Exception("Error Uploading file", 1);
+                return;
+            }
+            else{
+                $attachment_id = $upload[0]['id'];
+                $data['attachment_id'] = $attachment_id;
+            }
+        }
+
         $data['created_at'] = now();
         $data['updated_at'] = now();
+        $note = $this->notes->create($data);
 
-        // $note_id = $this->notes->create($data);
-
-        $note = Note::create($data);
         if($note){
             return response()->json($note);
         }
