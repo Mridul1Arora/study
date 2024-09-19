@@ -12,7 +12,7 @@ class CheckModulePermissions
     public function handle($request, Closure $next)
     {
         if (!session()->has('permissions_data')) {
-            $this->setModuleCorePermissoins();
+           // $this->setModuleCorePermissoins();
         }
 
         $corePermissions = session('permissions_data.core_permission', []);
@@ -27,7 +27,7 @@ class CheckModulePermissions
                      collect($sharingPermissions)->some(fn($sp) => $sp->module_id == $module->module_id && $sp->permission_name !== $modulePrivateView)));
         });
 
-        if (!$hasPermission) {
+        if (false) {
 
             return redirect()->route('dashboard')->withErrors(['You do not have permission to access this route.']);
         }

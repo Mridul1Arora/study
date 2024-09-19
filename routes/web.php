@@ -15,8 +15,7 @@ use App\Http\Controllers\NotesController;
 Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
-        // return view('pages/dashboard');
-        return view('test');
+         return view('pages/dashboard');
     })->middleware('verified')->name('dashboard');
  
 
