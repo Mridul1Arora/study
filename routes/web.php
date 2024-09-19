@@ -6,13 +6,17 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\UniversityController;
+use App\Http\Controllers\LeadController;
+use App\Http\Controllers\CallLogController;
+use App\Http\Controllers\NotesController;
 
   
 
 Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
-        return view('pages/dashboard');
+        // return view('pages/dashboard');
+        return view('test');
     })->middleware('verified')->name('dashboard');
  
 
@@ -27,6 +31,43 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/add-user' ,[UserController::class, 'addNewUser'])->name('users.add-user');
     Route::post('/users/add-user' ,[UserController::class, 'createNewUser'])->name('users.user-added');
 
+
+    // Route::get('lead/{id}', function () {
+    //     return view('pages/lead-id');
+    // })->name('lead-id');
+
+    Route::get('lead/{id}',[LeadController::class,'getDetailsPage']);
+
+
+    Route::get('get-lead-details/{id}',[LeadController::class,'getLeadDetails']);
+    
+    Route::get('/import', [LeadController::class, 'import'])->name('leads.import');
+
+    Route::get('/leads/data',[LeadController::class,'getLeads'])->name('getLeads');
+
+    Route::post('lead/update',[LeadController::class,'update'])->name('leads.update');
+
+    Route::delete('/leads/{id}', [LeadController::class, 'destroy'])->name('leads.destroy');
+
+    Route::post('lead',[LeadController::class,'create'])->name('leads.create');
+
+    //Calls Module
+    Route::get('calls', [CallLogController::class,'index'])->name('calls');
+    Route::get('calls/list', [CallLogController::class,'list'])->name('calls.list');
+    Route::get('calls/details/{id}', [CallLogController::class,'getDetails'])->name('calls.details');
+    Route::post('/calls/create', [CallLogController::class,'create']);
+    Route::post('/calls/update', [CallLogController::class,'update'])->name('calls.update');
+
+
+    //Notes Module
+    Route::get('/note/details/{id}',[NotesController::class,'getDetails']);
+    Route::post('/notes/create',[NotesController::class,'create'])->name('create.note');
+    Route::post('/notes/update',[NotesController::class,'update'])->name('update.note');
+    Route::delete('/notes/delete',[NotesController::class,'delete'])->name('delete.note');
+
+    Route::get('contact', function () {
+        return view('pages/contact');
+    })->name('contact');
 
     Route::get('/university' ,[UniversityController::class, 'index'])->name('university.index');
     Route::get('/university-data', [UniversityController::class, 'getUniversity'])->name('university.data');
@@ -142,9 +183,7 @@ Route::middleware(['auth','check_module_permission'])->group(function () {
 
 
 });
-
-
-
+});
 
 // Publicly accessible routes (Login, Register, Welcome page)
 Route::get('login', function () {
@@ -160,3 +199,4 @@ Route::get('/', function () {
 })->name('welcome');
 
 require __DIR__.'/auth.php';
+
