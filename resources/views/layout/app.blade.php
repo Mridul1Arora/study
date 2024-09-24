@@ -19,6 +19,9 @@
 
         <!-- Menu waves for no-customizer fix -->
         <link rel="stylesheet" href="../../assets/vendor/libs/node-waves/node-waves.css" />
+        <!-- Icons -->
+        <link rel="stylesheet" href="../../assets/vendor/fonts/remixicon/remixicon.css" />
+        <link rel="stylesheet" href="../../assets/vendor/fonts/flag-icons.css" />
 
         <!-- Core CSS -->
         <link rel="stylesheet" href="../../assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
@@ -88,5 +91,11 @@
         </div>     
 
 
-    </body>
+        <!-- Main JS -->
+        <script src="../../assets/js/main.js"></script>
+
+    <!-- Page Specific JS -->
+    <script src="../../assets/js/ui-navbar.js"></script>
+    <script src="../../assets/js/tables-datatables-basic.js"></script>
+  </body>
 </html>

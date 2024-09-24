@@ -124,14 +124,12 @@
                                     <div>Dashboards</div>
                                 </a>
                             </li>
-                            @can('view lead')
                             <li class="menu-item {{ request()->is('lead*') ? 'active' : '' }}">
                                 <a href="{{ url('/lead') }}" class="menu-link">
                                     <i class="menu-icon tf-icons ri-layout-2-line"></i>
                                     <div>Lead</div>
                                 </a>
                             </li>
-                            @endcan
                             <li class="menu-item {{ request()->is('contact*') ? 'active' : '' }}">
                                 <a href="{{ url('/contact') }}" class="menu-link">
                                     <i class="menu-icon tf-icons ri-article-line"></i>

@@ -9,13 +9,13 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\CallLogController;
 use App\Http\Controllers\NotesController;
 
+
   
 
 Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
-        return view('pages/dashboard');
-        // return view('test');
+         return view('pages/dashboard');
     })->middleware('verified')->name('dashboard');
  
 
@@ -97,8 +97,37 @@ Route::middleware('auth')->group(function () {
     Route::post('roles/permission/create', [RoleController::class, 'permisssionCreate'])->name('per.create');
 
 
-    
+    Route::get('lead', [LeadController::class,'index'])->name('lead');
+    Route::post('lead', [LeadController::class,'index'])->name('lead-post');
 
+    Route::get('lead/{id}',[LeadController::class,'getDetailsPage']);
+
+
+    Route::get('get-lead-details/{id}',[LeadController::class,'getLeadDetails']);
+    
+    Route::get('/import', [LeadController::class, 'import'])->name('leads.import');
+
+    Route::get('/leads/data',[LeadController::class,'getLeads'])->name('getLeads');
+
+    Route::post('lead/update',[LeadController::class,'update'])->name('leads.update');
+
+    Route::delete('/leads/{id}', [LeadController::class, 'destroy'])->name('leads.destroy');
+
+    Route::post('lead',[LeadController::class,'create'])->name('leads.create');
+
+    //Calls Module
+    Route::get('calls', [CallLogController::class,'index'])->name('calls');
+    Route::get('calls/list', [CallLogController::class,'list'])->name('calls.list');
+    Route::get('calls/details/{id}', [CallLogController::class,'getDetails'])->name('calls.details');
+    Route::post('/calls/create', [CallLogController::class,'create']);
+    Route::post('/calls/update', [CallLogController::class,'update'])->name('calls.update');
+
+
+    //Notes Module
+    Route::get('/note/details/{id}',[NotesController::class,'getDetails']);
+    Route::post('/notes/create',[NotesController::class,'create'])->name('create.note');
+    Route::post('/notes/update',[NotesController::class,'update'])->name('update.note');
+    Route::delete('/notes/delete',[NotesController::class,'delete'])->name('delete.note');
    
     Route::get('roles', function () {
         return view('pages/roles');
@@ -149,6 +178,8 @@ Route::middleware('auth')->group(function () {
 
 //check module permission
 // Route::middleware(['auth','check_module_permission'])->group(function () {
+
+  
 
     // Route::get('/lead', [LeadController::class, 'index'])->name('leads.index');
     // Route::get('/lead/create', [LeadController::class, 'create'])->name('leads.create');

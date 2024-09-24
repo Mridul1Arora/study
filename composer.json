@@ -12,13 +12,18 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "spatie/laravel-permission": "^6.9",
         "league/csv": "^9.16",
         "league/flysystem-aws-s3-v3": "^3.0",
         "maatwebsite/excel": "^3.1",
         "mongodb/mongodb": "^1.19",
         "spatie/laravel-activitylog": "^4.8",
-        "spatie/laravel-permission": "^6.9",
-        "yajra/laravel-datatables-oracle": "^10.11"
+        "yajra/laravel-datatables-oracle": "^10.11",
+        "elasticsearch/elasticsearch": "^8.15",
+        "jenssegers/mongodb": "^3.9",
+        "maatwebsite/excel": "^3.1",
+        "mongodb/mongodb": "^1.19"
+
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
