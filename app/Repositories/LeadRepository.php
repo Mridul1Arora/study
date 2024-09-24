@@ -9,6 +9,7 @@ use App\Services\ElasticServices\ElasticQueryHandler;
 use App\Services\ElasticServices\ElasticConstants;
 use App\Models\CallLog;
 use App\Models\Note;
+use App\Models\ActivityLog;
 
 
 class LeadRepository implements LeadRepositoryInterface{
@@ -75,6 +76,16 @@ class LeadRepository implements LeadRepositoryInterface{
         }
         else{
             return false;
+        }
+    }
+
+    public function getActivity($id){
+        $activity = ActivityLog::where('lead_id',(int)$id)->get();
+        if(!empty($activity)){
+            return $activity;
+        }
+        else{
+            return array();
         }
     }
 

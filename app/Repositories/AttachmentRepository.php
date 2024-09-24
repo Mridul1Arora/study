@@ -76,7 +76,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         return $attachment;
     }
 
-    public function uploadAttachment($files,$lead_id)
+    public function uploadAttachment($files,$lead_id,$origin='')
     {
         $uploadedFiles = [];
 
@@ -85,8 +85,16 @@ class AttachmentRepository implements AttachmentRepositoryInterface
                 try {
                     $fileExtension = $file->getClientOriginalExtension();
                     $fileSlugName = $file->getfilename();
-                    $file_folder = env('STORAGE_PATH');
-                    $filename = 'lead_'.time().$fileSlugName.'.'.$fileExtension;
+                    switch ($origin) {
+                        case 'notes':
+                            $file_folder = env('STORAGE_PATH_NOTES');
+                            $filename = 'notes_'.time().$fileSlugName.'.'.$fileExtension;
+                            break;
+                        default:
+                            $file_folder = env('STORAGE_PATH');
+                            $filename = 'lead_'.time().$fileSlugName.'.'.$fileExtension;
+                            break;
+                    }
                     $file_path = $file_folder.$filename;
                     $isUploaded = Storage::disk('wasabi')->put($file_path, file_get_contents($file),'public');
                     if($isUploaded) {

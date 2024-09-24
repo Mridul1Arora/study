@@ -4,29 +4,32 @@
     <div class="chat-history-body">
         <ul class="list-unstyled chat-history overflow-auto" style="max-height: 200px;">
             @foreach($notes as $note)
-            <li class="chat-message mb-3" data-note-id="{{ $note->id }}">
-                <div class="d-flex overflow-hidden">
-                    <div class="user-avatar flex-shrink-0 me-4">
-                        <div class="avatar avatar-sm">
-                            <img src="../../assets/img/avatars/4.png" alt="Avatar" class="rounded-circle" />
+                <li class="chat-message mb-3" data-note-id="{{ $note->id }}">
+                    <div class="d-flex overflow-hidden">
+                        <div class="user-avatar flex-shrink-0 me-4">
+                            <div class="avatar avatar-sm">
+                                <img src="../../assets/img/avatars/4.png" alt="Avatar" class="rounded-circle" />
+                            </div>
+                        </div>
+                        <div class="chat-message-wrapper flex-grow-1 position-relative">
+                            <div class="chat-message-text">
+                                <p class="mb-0" id="note_text_{{$note->id}}">{{ $note->note_text }}</p>
+                            </div>
+                            <div class="text-muted mt-1">
+                                <small>{{ $note->created_at }}</small>
+                                <small>{{ $note->added_by }}</small>
+                            </div>
+                            <!-- Buttons -->
+                            <div class="chat-message-actions position-absolute end-0 top-0 d-none">
+                                @if(!empty($note->attachment_id))
+                                    <button class="btn btn-info btn-sm me-2" onClick="download({{ $note->attachment_id }})">Download</button>
+                                @endif
+                                <button class="btn btn-info btn-sm me-2" onClick="openEdit({{ $note->id }})" data-bs-toggle="modal" data-bs-target="#addNewCCModal">Edit</button>
+                                <button class="btn btn-danger btn-sm ms-2" onClick="deleteNote({{ $note->id }})">Delete</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="chat-message-wrapper flex-grow-1 position-relative">
-                        <div class="chat-message-text">
-                            <p class="mb-0" id="note_text_{{$note->id}}">{{ $note->note_text }}</p>
-                        </div>
-                        <div class="text-muted mt-1">
-                            <small>{{ $note->created_at }}</small>
-                            <small>{{ $note->added_by }}</small>
-                        </div>
-                        <!-- Buttons -->
-                        <div class="chat-message-actions position-absolute end-0 top-0 d-none">
-                            <button class="btn btn-info btn-sm me-2" onClick="openEdit({{ $note->id }})" data-bs-toggle="modal" data-bs-target="#addNewCCModal">Edit</button>
-                            <button class="btn btn-danger btn-sm ms-2" onClick="deleteNote({{ $note->id }})">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            </li>
+                </li>
             @endforeach
         </ul>
     </div>
@@ -74,22 +77,9 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     const chatMessages = document.querySelectorAll('.chat-message');
-
-    //     chatMessages.forEach(function(message) {
-    //         const buttonContainer = message.querySelector('.chat-message-actions');
-
-    //         message.addEventListener('mouseenter', function() {
-    //             buttonContainer.classList.remove('d-none');
-    //         });
-
-    //         message.addEventListener('mouseleave', function() {
-    //             buttonContainer.classList.add('d-none');
-    //         });
-    //     });
-    // });
 
     document.addEventListener('DOMContentLoaded', function() {
         const chatHistory = document.querySelector('.chat-history');
@@ -112,6 +102,23 @@
         }, true);
     });
 
+    function download(attachment_id){
+        $.ajax({
+            url: "{{ route('attachment.action') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                action_code: 'DL', 
+                file_id: attachment_id
+            },
+            success: function(response) {
+                window.open(response.download_url, '_blank');
+            },
+            error: function(error) {
+            console.error('Action failed:', error);
+            }
+        });
+    }
 
     function editNote(){
         var id = document.getElementById('edit_note_id').value;
@@ -137,8 +144,6 @@
     }
 
     function openEdit(note_id){
-        // var note = document.getElementById(`note_text_${note_id}`).innerText;
-
         var edit_note = document.getElementById('note_edit');
         var edit_note_id = document.getElementById('edit_note_id');
         $.ajax({
@@ -155,15 +160,30 @@
     }
 
     function addNotes(){
+        var attachment = document.getElementById('attach-doc');
+        var formData = new FormData();
+
+        if (attachment.files.length > 0) {
+            console.log("Attaching file(s) to formData");
+            for (let i = 0; i < attachment.files.length; i++) {
+                formData.append('files[]', attachment.files[i]);
+            }
+        }
+
         var note = document.getElementById('notes_input').value;
         var lead_id = `{{ $id }}`;
+        formData.append('note', note);
+        formData.append('lead_id', lead_id);
+
         $.ajax({
             url: '/notes/create',
             type: 'POST',
-            data : {lead_id,note},
+            data: formData,
             headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
+            processData: false,
+            contentType: false,
             success: function(response) {
                 console.log(response);
                 var newNoteHTML = `
@@ -181,28 +201,39 @@
                                 <div class="text-muted mt-1">
                                     <small>${response.created_at}</small>
                                     <small>${response.added_by}</small>
+                                </div>`;
+
+                if(response.attachment_id){
+                    newNoteHTML += `<div class="chat-message-actions position-absolute end-0 top-0 d-none">
+                                        <button class="btn btn-info btn-sm me-2" onClick="download(${response.attachment_id})">Download</button>
+                                        <button class="btn btn-info btn-sm me-2" onClick="openEdit(${response.id})" data-bs-toggle="modal" data-bs-target="#addNewCCModal">Edit</button>
+                                        <button class="btn btn-danger btn-sm ms-2" onClick="deleteNote(${response.id})">Delete</button>
                                 </div>
-                                <!-- Buttons -->
-                                <div class="chat-message-actions position-absolute end-0 top-0 d-none">
+                            </div>
+                        </div>
+                    </li>`;
+                }
+                else{
+                    newNoteHTML += `<div class="chat-message-actions position-absolute end-0 top-0 d-none">
                                     <button class="btn btn-info btn-sm me-2" onClick="openEdit(${response.id})" data-bs-toggle="modal" data-bs-target="#addNewCCModal">Edit</button>
                                     <button class="btn btn-danger btn-sm ms-2" onClick="deleteNote(${response.id})">Delete</button>
                                 </div>
                             </div>
                         </div>
                     </li>`;
+                }
 
-                // Append the new note to the chat-history ul
                 $('.chat-history').append(newNoteHTML);
 
-                // Clear the input field
                 $('#notes_input').val('');
                 alert('Note Added successfully!');
             },
             error: function(xhr) {
-              alert('An error occurred while adding the note.');
+                alert('An error occurred while adding the note.');
             }
         });
     }
+
 
     function deleteNote(note_id){
         if (confirm('Are you sure you want to delete this note?')) {

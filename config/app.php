@@ -183,6 +183,8 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
+        App\Providers\CustomActivityLogServiceProvider::class,
+
 
         /*
          * Package Service Providers...

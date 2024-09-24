@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
 
 
 class CallLogSeeder extends Seeder
@@ -17,38 +18,35 @@ class CallLogSeeder extends Seeder
      */
     public function run()
     {
-        $data = [
-            [
-                'call_to' => 1,
-                'call_from' => 2,
-                'call_type' => 1, // 1-inbound
-                'call_start_time' => Carbon::now()->format('Y-m-d H:i:s'),
-                'time_duration' => '00:15:30', // 15 minutes 30 seconds
-                'call_purpose' => 1, // 1-L1
-                'call_agenda' => 'Meeting',
-                'call_result' => 1, // 1-Connected
-                'description' => 'Discussed project details.',
-                'call_status' => 'completed',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'call_to' => 3,
-                'call_from' => 4,
-                'call_type' => 2, // 2-outbound
-                'call_start_time' => Carbon::now()->format('Y-m-d H:i:s'),
-                'time_duration' => '00:05:00', // 5 minutes
-                'call_purpose' => 2, // 2-L2
-                'call_agenda' => 'Follow-up',
-                'call_result' => 3, // 3-Call Back
-                'description' => 'Scheduled a follow-up meeting.',
-                'call_status' => 'completed',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-        ];
+        $faker = Faker::create();
+        $data = [];
 
-        // Insert data into the table
-        DB::table('call_logs')->insert($data);
+        for ($i = 0; $i < 1000000; $i++) {
+            $data[] = [
+                'call_to' => $faker->numberBetween(1, 100),
+                'call_from' => $faker->numberBetween(1, 100),
+                'call_type' => $faker->randomElement([1, 2]), // 1-inbound, 2-outbound
+                'call_start_time' => Carbon::now()->subMinutes(rand(1, 10000))->format('Y-m-d H:i:s'),
+                'time_duration' => $faker->time('H:i:s'),
+                'call_purpose' => $faker->numberBetween(1, 5), // Example: 1-L1, 2-L2, etc.
+                'call_agenda' => $faker->sentence(),
+                'call_result' => $faker->randomElement([1, 2, 3]), // 1-Connected, 2-Missed, 3-Call Back
+                'description' => $faker->paragraph(),
+                'call_status' => $faker->randomElement(['completed', 'pending', 'failed']),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ];
+
+            // Insert in batches to avoid memory overload
+            if (count($data) == 1000) {
+                DB::table('call_logs')->insert($data);
+                $data = []; // Reset array for next batch
+            }
+        }
+
+        // Insert remaining data (if any)
+        if (!empty($data)) {
+            DB::table('call_logs')->insert($data);
+        }
     }
 }
